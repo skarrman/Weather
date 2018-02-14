@@ -16,7 +16,7 @@ struct DataPoint : Decodable {
 	let levelType: String
 	let level: Int
 	let unit: String
-	let values: [Int]
+	let values: [Double]
 	
 }
 

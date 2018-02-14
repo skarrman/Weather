@@ -8,14 +8,6 @@
 
 import UIKit
 
-struct Course: Decodable{
-	
-	let id: Int
-	let name: String
-	let link: String
-	let imageUrl: String
-	
-}
 class ViewController: UIViewController {
 
 	override func viewDidLoad() {
@@ -30,9 +22,13 @@ class ViewController: UIViewController {
 			
 			//Check for error and response
 			
+			print(error ?? "No error provided")
+			print(response ?? "No response provided")
+			
 			do{
 				let forecast = try JSONDecoder().decode(Forecast.self, from: data)
-				print(forecast)
+				//print(forecast)
+				print(forecast.timeSeries[0].parameters[0].values)
 			}  catch let jsonErr {
 				print("Error serilizing json", jsonErr)
 			}
@@ -44,6 +40,8 @@ class ViewController: UIViewController {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
+	
+	
 
 
 }
