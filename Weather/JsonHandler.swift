@@ -38,3 +38,4 @@ struct Forecast: Decodable {
 	let geometry: Geometry
 	let timeSeries: [TimeSeries]
 }
+
