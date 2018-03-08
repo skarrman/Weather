@@ -7,18 +7,21 @@
 //
 
 import UIKit
+import CoreLocation
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CLLocationManagerDelegate {
 	@IBOutlet weak var tempLabel: UILabel!
 	@IBOutlet weak var coordinatesLabel: UILabel!
 	
 
 	let forecastModel: ForecastModel
+	var locationManager: CLLocationManager!
 	
 	required init?(coder aDecoder: NSCoder) {
 		forecastModel = ForecastModel()
 		super.init(coder: aDecoder)
+		determineMyLocation()
 	}
 	
 	
@@ -47,11 +50,33 @@ class ViewController: UIViewController {
 		
 	}
 	
+	func determineMyLocation(){
+		locationManager = CLLocationManager()
+		locationManager.delegate = self
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		locationManager.requestWhenInUseAuthorization()
+		
+		if CLLocationManager.locationServicesEnabled() {
+			locationManager.startUpdatingLocation()
+		}
+	}
 	
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		let userLocation:CLLocation = locations[0] as CLLocation
+		
+		manager.stopUpdatingLocation()
+		
+		print("user latitude = \((userLocation.coordinate.latitude * 10000).rounded() / 10000)")
+		print("user longitude = \((userLocation.coordinate.longitude * 10000).rounded() / 10000)")
+		
+		forecastModel.updateForecast(longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
+		
+	}
 	
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		print("Error \(error)")
+	}
 	
-	
-
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.

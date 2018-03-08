@@ -7,23 +7,15 @@
 //
 
 import Foundation
-import CoreLocation
 
-class ForecastModel: NSObject, CLLocationManagerDelegate {
+
+class ForecastModel {
 	
 	var forecasts: [TimeSeries]?
 	
-	var locationManager: CLLocationManager!
-	
-	override init() {
-		super.init()
-		determineMyLocation()
-	}
-	
-	
 	func updateForecast(longitude: Double, latitude: Double){
-		let long = (longitude * 1000).rounded() / 1000
-		let lat = (latitude * 1000).rounded() / 1000
+		let long = (longitude * 10000).rounded() / 10000
+		let lat = (latitude * 10000).rounded() / 10000
 		
 		let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/\(long)/lat/\(lat)/data.json"
 		guard let url = URL(string: urlString) else { return }
@@ -46,33 +38,6 @@ class ForecastModel: NSObject, CLLocationManagerDelegate {
 				print("Error serilizing json", jsonErr)
 			}
 		}.resume()
-	}
-	
-	func determineMyLocation(){
-		locationManager = CLLocationManager()
-		locationManager.delegate = self
-		locationManager.desiredAccuracy = kCLLocationAccuracyBest
-		locationManager.requestWhenInUseAuthorization()
-		
-		if CLLocationManager.locationServicesEnabled() {
-			locationManager.startUpdatingLocation()
-		}
-	}
-	
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		let userLocation:CLLocation = locations[0] as CLLocation
-		
-		manager.stopUpdatingLocation()
-		
-		print("user latitude = \((userLocation.coordinate.latitude * 1000).rounded() / 1000)")
-		print("user longitude = \((userLocation.coordinate.longitude * 1000).rounded() / 1000)")
-		
-		updateForecast(longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
-		
-	}
-	
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		print("Error \(error)")
 	}
 	
 	
