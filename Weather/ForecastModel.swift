@@ -8,10 +8,13 @@
 
 import Foundation
 
-
 class ForecastModel {
 	
-	var forecasts: [TimeSeries]?
+	private var forecasts: [TimeSeries]?
+	
+	func getForecasts() -> [TimeSeries]{
+		return forecasts!
+	}
 	
 	func updateForecast(longitude: Double, latitude: Double){
 		let long = (longitude * 10000).rounded() / 10000
@@ -32,7 +35,8 @@ class ForecastModel {
 				let forecast = try JSONDecoder().decode(Forecast.self, from: data)
 				self.forecasts = forecast.timeSeries
 				
-				print(self.forecasts!.first ?? "No forecast")
+				//print(self.forecasts!.first ?? "No forecast")
+				NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "ForecastUpdated")))
 				
 			}  catch let jsonErr {
 				print("Error serilizing json", jsonErr)
