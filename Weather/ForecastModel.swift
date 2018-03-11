@@ -31,6 +31,9 @@ class ForecastModel {
 			print(error ?? "No error provided")
 			print(response ?? "No response provided")
 			
+			guard let httpResponse = response as! HTTPURLResponse? else{print("Not a HTTP");return}
+			print("StatusCode:",httpResponse.statusCode)
+			
 			do{
 				let forecast = try JSONDecoder().decode(Forecast.self, from: data)
 				self.forecasts = forecast.timeSeries
