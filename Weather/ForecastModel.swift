@@ -10,15 +10,24 @@ import Foundation
 
 class ForecastModel {
 	
-	private var forecasts: [TimeSeries]?
+	private var forecasts: [TimeSeries]!
+	private var cityName: String!
 	
 	func getForecasts() -> [TimeSeries]{
-		return forecasts!
+		return forecasts
 	}
 	
-	func updateForecast(longitude: Double, latitude: Double){
+	func getCityName() -> String {
+		return cityName
+	}
+	
+	func updateForecast(cityName: String, longitude: Double, latitude: Double){
 		let long = (longitude * 10000).rounded() / 10000
 		let lat = (latitude * 10000).rounded() / 10000
+		self.cityName = cityName
+		
+		//Ryd test url
+		//let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/12.5033/lat/57.8579/data.json"
 		
 		let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/\(long)/lat/\(lat)/data.json"
 		guard let url = URL(string: urlString) else { return }
@@ -34,6 +43,10 @@ class ForecastModel {
 			guard let httpResponse = response as! HTTPURLResponse? else{print("Not a HTTP");return}
 			print("StatusCode:",httpResponse.statusCode)
 			
+			if httpResponse.statusCode != 200 {
+				NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "BadRequest")))
+				return
+			}
 			do{
 				let forecast = try JSONDecoder().decode(Forecast.self, from: data)
 				self.forecasts = forecast.timeSeries

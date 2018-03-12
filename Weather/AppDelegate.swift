@@ -12,16 +12,18 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
+	var mainViewController: ViewController!
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		UIApplication.shared.statusBarStyle = .lightContent
 		
 		// Override point for customization after application launch.
 		window = UIWindow(frame: UIScreen.main.bounds)
-		let viewController = ViewController()
-		window?.rootViewController = viewController
+
+		mainViewController = ViewController()
+		window?.rootViewController = mainViewController
 		window?.makeKeyAndVisible()
+		UIApplication.shared.statusBarStyle = .lightContent
 		return true
 	}
 
@@ -41,6 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationDidBecomeActive(_ application: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+		
+		mainViewController.startUpdatingForecast()
 	}
 
 	func applicationWillTerminate(_ application: UIApplication) {

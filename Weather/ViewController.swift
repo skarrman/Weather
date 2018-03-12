@@ -12,39 +12,54 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
 
-	var forecastModel: ForecastModel?
-	var locationManager: CLLocationManager!
-	var center: CGPoint?
-	var activityIndicatorView: UIActivityIndicatorView?
+	var forecastModel: ForecastModel!
+	var locationServices: LocationServices!
+	var activityIndicatorView: UIActivityIndicatorView!
+	var cityLabel: UILabel!
+	var tempLabel: UILabel!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .black
 		forecastModel = ForecastModel()
-		center = CGPoint(x: (UIScreen.main.bounds.width * 0.5), y: (UIScreen.main.bounds.height * 0.5))
+		locationServices = LocationServices(forecastModel: forecastModel)
+	
 		activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
-		determineMyLocation()
+		tempLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
+		tempLabel.center = self.view.center
+		tempLabel.textAlignment = .center
+		tempLabel.font = UIFont.systemFont(ofSize: 60)
+		tempLabel.textColor = .white
 		
+		cityLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
+		cityLabel.center = CGPoint(x: self.view.center.x, y: self.view.center.y - self.view.center.y * 0.5)
+		cityLabel.textAlignment = .center
+		cityLabel.font = UIFont.systemFont(ofSize: 60)
+		cityLabel.textColor = .white
+	}
+	
+	func startUpdatingForecast(){
 		activityIndicatorView!.center = self.view.center
 		activityIndicatorView!.startAnimating()
 		activityIndicatorView!.hidesWhenStopped = true
 		self.view.addSubview(activityIndicatorView!)
+		locationServices.determineMyLocation()
 	}
 	
 	@objc func forecastUpdated(){
-		print("ForecastUpdated! :)")
 		
 		
-		let forecasts = forecastModel!.getForecasts()
+		let forecasts = forecastModel.getForecasts()
+		let cityName = forecastModel.getCityName()
 		let dateFormatter = ISO8601DateFormatter()
 		for f in forecasts {
 			guard let date = dateFormatter.date(from: f.validTime) else { return }
 			//print(date)
 			let calendar = Calendar.current
 			let d = calendar.dateComponents([.day, .hour], from: date)
-			print(d.day!, d.hour!)
+			//print(d.day!, d.hour!)
 		}
 
 		//print(date)
@@ -54,45 +69,33 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 				temp = String(p.values[0])
 			}
 			DispatchQueue.main.async {
-				let tempLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
-				tempLabel.center = self.view.center
-				tempLabel.textAlignment = .center
-				tempLabel.text = "\(temp) ℃"
-				tempLabel.font = UIFont.systemFont(ofSize: 78)
-				tempLabel.textColor = .white
+				self.tempLabel.text = "\(temp) ℃"
+				self.cityLabel.text = cityName
 				self.activityIndicatorView!.stopAnimating()
-				self.view.addSubview(tempLabel)
+				self.view.addSubview(self.tempLabel)
+				self.view.addSubview(self.cityLabel)
 			}
 		}
-		
-	}
-	
-	func determineMyLocation(){
-		locationManager = CLLocationManager()
-		locationManager.delegate = self
-		locationManager.desiredAccuracy = kCLLocationAccuracyBest
-		locationManager.requestWhenInUseAuthorization()
-		
-		if CLLocationManager.locationServicesEnabled() {
-			locationManager.startUpdatingLocation()
+		var corr = true
+		for f in forecasts {
+			let order = ["msl", "t", "vis", "wd", "ws", "r", "tstm", "tcc_mean", "lcc_mean", "mcc_mean", "hcc_mean", "gust", "pmin", "pmax", "spp", "pcat", "pmean", "pmedian", "Wsymb2"]
+			for (i , p) in f.parameters.enumerated() {
+				//print(p.name, order[i])
+				if(p.name != order[i]){
+					corr = false
+					break
+				}
+			}
 		}
-	}
-	
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		let userLocation:CLLocation = locations[0] as CLLocation
+		print(corr)
 		
-		manager.stopUpdatingLocation()
-		
-		print("user latitude = \((userLocation.coordinate.latitude * 10000).rounded() / 10000)")
-		print("user longitude = \((userLocation.coordinate.longitude * 10000).rounded() / 10000)")
-		
-		forecastModel!.updateForecast(longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
+		/*
+{"validTime":"2018-02-27T09:00:00Z","parameters":[
+ msl t vis wd ws r tstm tcc_mean lcc_mean mcc_mean hcc_mean gust pmin pmax spp pcat pmean pmedian Wsymb2"*/
 		
 	}
 	
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		print("Error \(error)")
-	}
+	
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
