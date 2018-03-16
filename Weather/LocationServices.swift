@@ -13,6 +13,7 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 	
 	var forecastModel: ForecastModel
 	var locationManager: CLLocationManager!
+	private var lastLocation: CLLocation?
 	
 	init(forecastModel: ForecastModel) {
 		locationManager = CLLocationManager()
@@ -32,31 +33,58 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		let userLocation:CLLocation = locations[0] as CLLocation
-		
+		var userLocation: CLLocation!
+		if TARGET_IPHONE_SIMULATOR == 0 {
+			userLocation = locations[0] as CLLocation
+		}else {
+			//userLocation = CLLocation(latitude: 57.857539, longitude: 12.502884)
+			userLocation = CLLocation(latitude: 59.331495, longitude: 18.056975)
+		}
 		manager.stopUpdatingLocation()
 		
-		let geocoder = CLGeocoder()
+		let reverseGeocoder = CLGeocoder()
+		
+		var distance: CLLocationDistance
+		
+		if lastLocation != nil {
+			distance = lastLocation!.distance(from: userLocation)
+		}else{
+			distance = -1
+		}
 
-		geocoder.reverseGeocodeLocation(userLocation, completionHandler: { (placemarks, error) in
+		reverseGeocoder.reverseGeocodeLocation(userLocation ){ (placemarks, error) in
 			if error == nil {
 				let firstLocation = placemarks?[0]
 				let cityName = firstLocation!.locality!
-				print(firstLocation?.locality ?? "No location given")
 				
-				self.forecastModel.updateForecast(cityName: cityName, longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
+				self.forecastModel.updateForecast(cityName: cityName, longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude, distance: distance)
+				self.lastLocation = userLocation
+				return
+				
 			}
 			else {
 				// An error occurred during geocoding.
 				print("An error occurred during geocoding.")
 			}
-		})
+		}
 		
-		print("user latitude = \((userLocation.coordinate.latitude * 10000).rounded() / 10000)")
-		print("user longitude = \((userLocation.coordinate.longitude * 10000).rounded() / 10000)")
+//		let geocoder = CLGeocoder()
+//
+//		geocoder.geocodeAddressString("Hemsjö") { (placemarks, error) in
+//			
+//			if error == nil {
+//				if let location = placemarks?.first {
+//					print("City: ", location.locality ?? "No city")
+//					print("Coordinates: ", location.location?.coordinate ?? "No coordinates")
+//				}
+//			}
+//			return
+//		}
 		
+//		print("user latitude = \(userLocation.coordinate.latitude)")
+//		print("user longitude = \(userLocation.coordinate.longitude)")
 		
-		
+
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

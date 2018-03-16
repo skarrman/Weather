@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-	var mainViewController: ViewController!
+	var mainViewController: MainViewController!
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		window = UIWindow(frame: UIScreen.main.bounds)
 
-		mainViewController = ViewController()
+		mainViewController = MainViewController()
 		window?.rootViewController = mainViewController
 		window?.makeKeyAndVisible()
 		UIApplication.shared.statusBarStyle = .lightContent
