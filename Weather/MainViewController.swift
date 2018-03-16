@@ -15,12 +15,11 @@ class MainViewController: UIViewController {
 	var locationServices: LocationServices!
 	
 	var activityIndicatorView: UIActivityIndicatorView!
-	var cityLabel: UILabel!
-	var tempLabel: UILabel!
+	var todayViewController: TodayViewController!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .black
+		
 		forecastModel = ForecastModel()
 		locationServices = LocationServices(forecastModel: forecastModel)
 		
@@ -29,9 +28,11 @@ class MainViewController: UIViewController {
 		//UIApplication.shared.statusBarFrame.height
 		
 		//Init UI elements
+		initMainView()
+		initTodayView()
 		initActivityIndicator()
-		initTempLabel()
-		initCityLabel()
+	
+		
 	}
 	
 	func startUpdatingForecast(){
@@ -43,18 +44,14 @@ class MainViewController: UIViewController {
 		let forecasts = forecastModel.getForecasts()
 		let cityName = forecastModel.getCityName()
 		
-		let temp = forecasts.first!.temp
+		//let temp = forecasts.first!.temp
 
 		//print(date)
+		todayViewController.updateWith(forecast: forecasts.first!, cityName: cityName)
 		DispatchQueue.main.async {
-			self.tempLabel.text = "\(temp) ℃"
-			self.cityLabel.text = cityName
 			if self.activityIndicatorView.isAnimating {
 				self.activityIndicatorView.stopAnimating()
 			}
-			self.view.addSubview(self.tempLabel)
-			self.view.addSubview(self.cityLabel)
-			
 		}
 		
 //		for (i, f) in forecasts.enumerated() {
@@ -66,6 +63,13 @@ class MainViewController: UIViewController {
 		
 	}
 	
+	func initMainView() {
+		//view.translatesAutoresizingMaskIntoConstraints = false
+		//Asså this shit...
+		//view.bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+		view.backgroundColor = .black
+	}
+	
 	func initActivityIndicator() {
 		activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
 		activityIndicatorView.center = self.view.center
@@ -74,21 +78,20 @@ class MainViewController: UIViewController {
 		self.view.addSubview(activityIndicatorView!)
 	}
 	
-	func initTempLabel() {
-		tempLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
-		tempLabel.center = self.view.center
-		tempLabel.textAlignment = .center
-		tempLabel.font = UIFont.systemFont(ofSize: 60)
-		tempLabel.textColor = .white
+	func initTodayView() {
+		todayViewController = TodayViewController()
+		self.addChildViewController(todayViewController)
+		todayViewController.didMove(toParentViewController: self)
+		
+		//Contraints
+		todayViewController.view.translatesAutoresizingMaskIntoConstraints = false
+		todayViewController.view.bounds = CGRect(x: 0, y: UIApplication.shared.statusBarFrame.height, width: self.view.bounds.width, height: self.view.bounds.height * 0.3)
+		todayViewController.view.center = CGPoint(x: self.view.center.x, y: todayViewController.view.bounds.height * 0.5 + UIApplication.shared.statusBarFrame.height)
+		self.view.addSubview(todayViewController.view)
+		
 	}
 	
-	func initCityLabel() {
-		cityLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
-		cityLabel.center = CGPoint(x: self.view.center.x, y: self.view.center.y - self.view.center.y * 0.5)
-		cityLabel.textAlignment = .center
-		cityLabel.font = UIFont.systemFont(ofSize: 60)
-		cityLabel.textColor = .white
-	}
+
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()

@@ -71,9 +71,8 @@ class ForecastModel {
 		let dateFormatter = ISO8601DateFormatter()
 		referenceTime = dateFormatter.date(from: forecasts.referenceTime)
 		let calendar = Calendar.current
-		let components = calendar.dateComponents([.weekday, .month, .day, .hour], from: referenceTime!)
+		//let components = calendar.dateComponents([.weekday, .month, .day, .hour], from: referenceTime!)
 		
-		print(components)
 		let timeSeries = forecasts.timeSeries
 		var f = [Forecast]()
 		

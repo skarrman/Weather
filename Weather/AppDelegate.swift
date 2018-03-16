@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		mainViewController = MainViewController()
+		mainViewController.view.bounds = window!.bounds
 		window?.rootViewController = mainViewController
 		window?.makeKeyAndVisible()
 		UIApplication.shared.statusBarStyle = .lightContent

@@ -37,8 +37,8 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 		if TARGET_IPHONE_SIMULATOR == 0 {
 			userLocation = locations[0] as CLLocation
 		}else {
-			//userLocation = CLLocation(latitude: 57.857539, longitude: 12.502884)
-			userLocation = CLLocation(latitude: 59.331495, longitude: 18.056975)
+			userLocation = CLLocation(latitude: 57.857539, longitude: 12.502884)
+			//userLocation = CLLocation(latitude: 59.331495, longitude: 18.056975)
 		}
 		manager.stopUpdatingLocation()
 		
