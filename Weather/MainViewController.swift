@@ -14,84 +14,88 @@ class MainViewController: UIViewController {
 	var forecastModel: ForecastModel!
 	var locationServices: LocationServices!
 	
-	var activityIndicatorView: UIActivityIndicatorView!
-	var todayViewController: TodayViewController!
+	
+	var todayViewController: TodayViewController = {
+		let viewController = TodayViewController()
+		viewController.view.translatesAutoresizingMaskIntoConstraints = false
+		return viewController
+	}()
+	var forecastTableView: ForecsatTableViewController = {
+		let tableViewController = ForecsatTableViewController()
+		tableViewController.view.translatesAutoresizingMaskIntoConstraints = false
+		return tableViewController
+	}()
+	var activityIndicatorView: UIActivityIndicatorView = {
+		let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		view.translatesAutoresizingMaskIntoConstraints = false
+		view.hidesWhenStopped = true
+		return view
+	}()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		view.backgroundColor = .black
 		
 		forecastModel = ForecastModel()
 		locationServices = LocationServices(forecastModel: forecastModel)
+		self.view.addSubview(todayViewController.view)
+		self.view.addSubview(forecastTableView.view)
+		self.view.addSubview(activityIndicatorView)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
-	
-		//UIApplication.shared.statusBarFrame.height
 		
 		//Init UI elements
-		initMainView()
 		initTodayView()
 		initActivityIndicator()
-	
-		
+		initTableView()
 	}
 	
 	func startUpdatingForecast(){
 		//updated = false
 		locationServices.determineMyLocation()
 	}
+
 	
 	@objc func forecastUpdated(){
 		let forecasts = forecastModel.getForecasts()
 		let cityName = forecastModel.getCityName()
 		
-		//let temp = forecasts.first!.temp
-
-		//print(date)
 		todayViewController.updateWith(forecast: forecasts.first!, cityName: cityName)
+		forecastTableView.updateWithForecast(forecasts: forecasts)
 		DispatchQueue.main.async {
 			if self.activityIndicatorView.isAnimating {
 				self.activityIndicatorView.stopAnimating()
 			}
 		}
 		
-//		for (i, f) in forecasts.enumerated() {
-//			print(i, f)
-//		}
-		/*
-{"validTime":"2018-02-27T09:00:00Z","parameters":[
- msl t vis wd ws r tstm tcc_mean lcc_mean mcc_mean hcc_mean gust pmin pmax spp pcat pmean pmedian Wsymb2"*/
-		
 	}
 	
-	func initMainView() {
-		//view.translatesAutoresizingMaskIntoConstraints = false
-		//Asså this shit...
-		//view.bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-		view.backgroundColor = .black
+	func initTableView() {
+		let tableView = forecastTableView.view!
+		tableView.topAnchor.constraint(equalTo: todayViewController.view.bottomAnchor, constant: 20).isActive = true
+		tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
 	}
 	
 	func initActivityIndicator() {
-		activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-		activityIndicatorView.center = self.view.center
+		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
 		activityIndicatorView.startAnimating()
-		activityIndicatorView.hidesWhenStopped = true
-		self.view.addSubview(activityIndicatorView!)
 	}
 	
 	func initTodayView() {
-		todayViewController = TodayViewController()
 		self.addChildViewController(todayViewController)
 		todayViewController.didMove(toParentViewController: self)
-		
-		//Contraints
-		todayViewController.view.translatesAutoresizingMaskIntoConstraints = false
-		todayViewController.view.bounds = CGRect(x: 0, y: UIApplication.shared.statusBarFrame.height, width: self.view.bounds.width, height: self.view.bounds.height * 0.3)
-		todayViewController.view.center = CGPoint(x: self.view.center.x, y: todayViewController.view.bounds.height * 0.5 + UIApplication.shared.statusBarFrame.height)
-		self.view.addSubview(todayViewController.view)
-		
-	}
-	
+		//todayViewController.view.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height * 0.3)
 
+		//Contraints
+		let todayView = todayViewController.view!
+		todayView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+		todayView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
+		todayView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+		todayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
