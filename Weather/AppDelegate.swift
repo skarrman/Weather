@@ -20,11 +20,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		window = UIWindow(frame: UIScreen.main.bounds)
 
-		mainViewController = MainViewController()
-		mainViewController.view.bounds = window!.bounds
-		window?.rootViewController = mainViewController
-		window?.makeKeyAndVisible()
 		UIApplication.shared.statusBarStyle = .lightContent
+		mainViewController = MainViewController()
+		let navigationController = UINavigationController(rootViewController: mainViewController)
+		navigationController.navigationBar.barStyle = .black
+		navigationController.setNavigationBarHidden(true, animated: false)
+		navigationController.pushViewController(mainViewController, animated: true)
+		window?.rootViewController = navigationController
+		window?.makeKeyAndVisible()
+		
+		//navigationController.pushViewController(mainViewController, animated: false)
 		return true
 	}
 

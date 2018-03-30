@@ -11,6 +11,7 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+	
 	var forecastModel: ForecastModel!
 	var locationServices: LocationServices!
 	
@@ -36,6 +37,8 @@ class MainViewController: UIViewController {
 		super.viewDidLoad()
 		view.backgroundColor = .black
 		
+		
+		_ = UINavigationController(rootViewController: self)
 		forecastModel = ForecastModel()
 		locationServices = LocationServices(forecastModel: forecastModel)
 		self.view.addSubview(todayViewController.view)
@@ -72,6 +75,8 @@ class MainViewController: UIViewController {
 	
 	func initTableView() {
 		let tableView = forecastTableView.view!
+		self.addChildViewController(forecastTableView)
+		forecastTableView.didMove(toParentViewController: self)
 		tableView.topAnchor.constraint(equalTo: todayViewController.view.bottomAnchor, constant: 20).isActive = true
 		tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true

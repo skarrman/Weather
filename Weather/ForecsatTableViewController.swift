@@ -10,7 +10,7 @@ import UIKit
 
 class ForecsatTableViewController: UITableViewController {
 	
-	var forecasts: [Forecast] = [Forecast]()
+	var forecasts: [[Forecast]] = [[Forecast]]()
 	var numberOfRows = 0
 
     override func viewDidLoad() {
@@ -20,6 +20,7 @@ class ForecsatTableViewController: UITableViewController {
 		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellId")
 		tableView.rowHeight = 70
 
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -27,17 +28,29 @@ class ForecsatTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
+	
 	func updateWithForecast(forecasts: [Forecast]) {
-		var numberOfSections = 1
-		let lastDate = forecasts.first?.date.day!
-		self.forecasts = forecasts
-		for f in forecasts {
-			if(f.date.day != lastDate){
-				break
+		self.forecasts.removeAll()
+		var index = 1
+		while(index < forecasts.count){
+			var fList = [Forecast]()
+			if forecasts[index].date.day! == forecasts.first!.date.day! {
+				fList.append(forecasts[index])
+				index += 1
+			}else {
+				let currentDay = forecasts[index].date.day!
+				while forecasts[index].date.day! == currentDay {
+					fList.append(forecasts[index])
+					index += 1
+					
+					if index >= forecasts.count {
+						break
+					}
+				}
 			}
-			numberOfSections += 1
+			self.forecasts.append(fList)
 		}
-		numberOfRows = numberOfSections + 9
+		
 		DispatchQueue.main.async {
 			self.tableView.reloadData()
 		}
@@ -59,19 +72,26 @@ class ForecsatTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
 //		print(numberOfRows)
-//        return numberOfRows
-		return forecasts.count
+        return forecasts.count
+		//return forecasts.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ForecastTableViewCell
+		
 		cell.setUpCell(forecast: forecasts[indexPath.row])
 
         // Configure the cell...
 
         return cell
     }
-
+	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let destination = DetailedTableViewController()
+		destination.updateWith(forecasts: forecasts[indexPath.row])
+		navigationController?.pushViewController(destination, animated: true)
+	}
+	
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
