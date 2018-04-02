@@ -9,8 +9,11 @@
 /* Begin PBXBuildFile section */
 		7E0D1C44205547DC0069AD2B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E0D1C43205547DC0069AD2B /* Launch Screen.storyboard */; };
 		7E18B6372034261C00167CC2 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7E18B6362034261C00167CC2 /* .gitignore */; };
+		7E2F08ED206E621000BCDECF /* TableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08EC206E621000BCDECF /* TableViewHeader.swift */; };
+		7E2F08EF206FA87500BCDECF /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */; };
+		7E2F08F12072529900BCDECF /* DetailedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */; };
 		7E403F5D204FC70700329A8C /* ForecastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E403F5C204FC70700329A8C /* ForecastModel.swift */; };
-		7E6D7275205BA81700F61327 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7274205BA81700F61327 /* TodayViewController.swift */; };
+		7E6D7275205BA81700F61327 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7274205BA81700F61327 /* TodayView.swift */; };
 		7E6D7277205EF1E600F61327 /* ForecsatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7276205EF1E600F61327 /* ForecsatTableViewController.swift */; };
 		7E6D7279205EF91900F61327 /* ForecastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7278205EF91900F61327 /* ForecastTableViewCell.swift */; };
 		7E78BCA42056DDCA003AFE81 /* LocationServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E78BCA32056DDCA003AFE81 /* LocationServices.swift */; };
@@ -25,8 +28,11 @@
 /* Begin PBXFileReference section */
 		7E0D1C43205547DC0069AD2B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7E18B6362034261C00167CC2 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		7E2F08EC206E621000BCDECF /* TableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHeader.swift; sourceTree = "<group>"; };
+		7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
+		7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedTableViewCell.swift; sourceTree = "<group>"; };
 		7E403F5C204FC70700329A8C /* ForecastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastModel.swift; sourceTree = "<group>"; };
-		7E6D7274205BA81700F61327 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		7E6D7274205BA81700F61327 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		7E6D7276205EF1E600F61327 /* ForecsatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecsatTableViewController.swift; sourceTree = "<group>"; };
 		7E6D7278205EF91900F61327 /* ForecastTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastTableViewCell.swift; sourceTree = "<group>"; };
 		7E78BCA32056DDCA003AFE81 /* LocationServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
@@ -79,11 +85,14 @@
 				7E403F5C204FC70700329A8C /* ForecastModel.swift */,
 				7E0D1C43205547DC0069AD2B /* Launch Screen.storyboard */,
 				7E78BCA32056DDCA003AFE81 /* LocationServices.swift */,
-				7E6D7274205BA81700F61327 /* TodayViewController.swift */,
+				7E6D7274205BA81700F61327 /* TodayView.swift */,
 				7E6D7276205EF1E600F61327 /* ForecsatTableViewController.swift */,
 				7E6D7278205EF91900F61327 /* ForecastTableViewCell.swift */,
 				7E889AC32061968600A54BCD /* IconHandler.swift */,
 				7E889AC5206E1BCE00A54BCD /* DetailedTableViewController.swift */,
+				7E2F08EC206E621000BCDECF /* TableViewHeader.swift */,
+				7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */,
+				7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -115,7 +124,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Simon Kärrman";
 				TargetAttributes = {
 					7EFDE01A2030753300486AA7 = {
@@ -162,10 +171,13 @@
 			files = (
 				7E6D7279205EF91900F61327 /* ForecastTableViewCell.swift in Sources */,
 				7EAD41482047DC8100DA4554 /* Forecast.swift in Sources */,
+				7E2F08EF206FA87500BCDECF /* DetailedViewController.swift in Sources */,
 				7EFDE0212030753300486AA7 /* MainViewController.swift in Sources */,
-				7E6D7275205BA81700F61327 /* TodayViewController.swift in Sources */,
+				7E6D7275205BA81700F61327 /* TodayView.swift in Sources */,
 				7E6D7277205EF1E600F61327 /* ForecsatTableViewController.swift in Sources */,
+				7E2F08ED206E621000BCDECF /* TableViewHeader.swift in Sources */,
 				7E889AC42061968600A54BCD /* IconHandler.swift in Sources */,
+				7E2F08F12072529900BCDECF /* DetailedTableViewCell.swift in Sources */,
 				7E403F5D204FC70700329A8C /* ForecastModel.swift in Sources */,
 				7E889AC6206E1BCE00A54BCD /* DetailedTableViewController.swift in Sources */,
 				7E78BCA42056DDCA003AFE81 /* LocationServices.swift in Sources */,
@@ -190,6 +202,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -197,6 +210,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -224,7 +238,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -247,6 +261,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -254,6 +269,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -275,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

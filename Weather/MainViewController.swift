@@ -15,15 +15,9 @@ class MainViewController: UIViewController {
 	var forecastModel: ForecastModel!
 	var locationServices: LocationServices!
 	
-	
-	var todayViewController: TodayViewController = {
-		let viewController = TodayViewController()
-		viewController.view.translatesAutoresizingMaskIntoConstraints = false
-		return viewController
-	}()
 	var forecastTableView: ForecsatTableViewController = {
 		let tableViewController = ForecsatTableViewController()
-		tableViewController.view.translatesAutoresizingMaskIntoConstraints = false
+		tableViewController.tableView.translatesAutoresizingMaskIntoConstraints = false
 		return tableViewController
 	}()
 	var activityIndicatorView: UIActivityIndicatorView = {
@@ -33,6 +27,7 @@ class MainViewController: UIViewController {
 		return view
 	}()
 	
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .black
@@ -41,18 +36,17 @@ class MainViewController: UIViewController {
 		_ = UINavigationController(rootViewController: self)
 		forecastModel = ForecastModel()
 		locationServices = LocationServices(forecastModel: forecastModel)
-		self.view.addSubview(todayViewController.view)
 		self.view.addSubview(forecastTableView.view)
 		self.view.addSubview(activityIndicatorView)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
 		
+		//navigationItem.title = "- - - - -"
+		
 		//Init UI elements
-		initTodayView()
 		initActivityIndicator()
 		initTableView()
 	}
-	
 	func startUpdatingForecast(){
 		//updated = false
 		locationServices.determineMyLocation()
@@ -63,9 +57,10 @@ class MainViewController: UIViewController {
 		let forecasts = forecastModel.getForecasts()
 		let cityName = forecastModel.getCityName()
 		
-		todayViewController.updateWith(forecast: forecasts.first!, cityName: cityName)
 		forecastTableView.updateWithForecast(forecasts: forecasts)
 		DispatchQueue.main.async {
+			self.title = cityName
+			
 			if self.activityIndicatorView.isAnimating {
 				self.activityIndicatorView.stopAnimating()
 			}
@@ -74,10 +69,10 @@ class MainViewController: UIViewController {
 	}
 	
 	func initTableView() {
-		let tableView = forecastTableView.view!
+		let tableView = forecastTableView.tableView!
 		self.addChildViewController(forecastTableView)
 		forecastTableView.didMove(toParentViewController: self)
-		tableView.topAnchor.constraint(equalTo: todayViewController.view.bottomAnchor, constant: 20).isActive = true
+		tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
 		tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
 		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
@@ -89,18 +84,6 @@ class MainViewController: UIViewController {
 		activityIndicatorView.startAnimating()
 	}
 	
-	func initTodayView() {
-		self.addChildViewController(todayViewController)
-		todayViewController.didMove(toParentViewController: self)
-		//todayViewController.view.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height * 0.3)
-
-		//Contraints
-		let todayView = todayViewController.view!
-		todayView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
-		todayView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
-		todayView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
-		todayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()

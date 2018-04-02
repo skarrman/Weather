@@ -31,21 +31,16 @@ class ForecsatTableViewController: UITableViewController {
 	
 	func updateWithForecast(forecasts: [Forecast]) {
 		self.forecasts.removeAll()
-		var index = 1
-		while(index < forecasts.count){
+		var index = 0
+		while index < forecasts.count {
 			var fList = [Forecast]()
-			if forecasts[index].date.day! == forecasts.first!.date.day! {
+			let currentDay = forecasts[index].date.day!
+			while forecasts[index].date.day! == currentDay {
 				fList.append(forecasts[index])
 				index += 1
-			}else {
-				let currentDay = forecasts[index].date.day!
-				while forecasts[index].date.day! == currentDay {
-					fList.append(forecasts[index])
-					index += 1
-					
-					if index >= forecasts.count {
-						break
-					}
+				
+				if index >= forecasts.count {
+					break
 				}
 			}
 			self.forecasts.append(fList)
@@ -53,9 +48,11 @@ class ForecsatTableViewController: UITableViewController {
 		
 		DispatchQueue.main.async {
 			self.tableView.reloadData()
+
 		}
 		
 	}
+	
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -66,29 +63,56 @@ class ForecsatTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+		return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
 //		print(numberOfRows)
-        return forecasts.count
+		return forecasts.count < 1 ? 0 : (forecasts.first!.count > 6 ? 5 + forecasts.count - 1 : forecasts.first!.count + forecasts.count - 1)
 		//return forecasts.count
     }
-
+	
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if indexPath.row == 0 {
+			return tableView.bounds.height * 0.2
+		}else{
+			return 70
+		}
+	}
+	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ForecastTableViewCell
-		
-		cell.setUpCell(forecast: forecasts[indexPath.row])
-
+	
+		if indexPath.row == 0 {
+			let todayCell = TodayView()
+			todayCell.updateWith(forecast: forecasts.first!.first!)
+			todayCell.setUpViews()
+			return todayCell
+			
+		}else {
+			
+			let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ForecastTableViewCell
+			if indexPath.row <  ((forecasts.first!.count > 6) ? 6 : forecasts.first!.count) {
+				var f = [Forecast]()
+				f.append(forecasts[0][indexPath.row])
+				cell.setUpCell(forecast: f)
+			}else {
+				cell.setUpCell(forecast: forecasts[indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)])
+			}
+			return cell
         // Configure the cell...
-
-        return cell
+		}
     }
 	
+	
+	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let destination = DetailedTableViewController()
-		destination.updateWith(forecasts: forecasts[indexPath.row])
+		let destination = DetailedViewController()
+		var index = 0
+		if indexPath.row > ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count) {
+			index = indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)
+		}
+		destination.detailedTableViewController.updateWith(forecasts: forecasts, dayToScrollTo: forecasts[index].first!.date.day!)
 		navigationController?.pushViewController(destination, animated: true)
 	}
 	

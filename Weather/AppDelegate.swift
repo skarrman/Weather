@@ -24,8 +24,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		mainViewController = MainViewController()
 		let navigationController = UINavigationController(rootViewController: mainViewController)
 		navigationController.navigationBar.barStyle = .black
-		navigationController.setNavigationBarHidden(true, animated: false)
 		navigationController.pushViewController(mainViewController, animated: true)
+		navigationController.navigationBar.prefersLargeTitles = true
+		navigationController.navigationBar.tintColor = .white
+		navigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController.navigationItem.largeTitleDisplayMode = .always
+		navigationController.navigationBar.isTranslucent = false
+
 		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 		

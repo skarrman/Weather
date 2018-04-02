@@ -10,22 +10,21 @@ import UIKit
 
 class DetailedTableViewController: UITableViewController {
 	
-	var forecasts: [Forecast] = [Forecast]()
+	var forecasts: [[Forecast]] = [[Forecast]]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		navigationController?.setNavigationBarHidden(false, animated: false)
-		
+		tableView.estimatedRowHeight = 70
+		tableView.estimatedSectionHeaderHeight = 35
 		tableView.rowHeight = 70
+		tableView.sectionHeaderHeight = 35
 		
-		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellID")
+		tableView.register(DetailedTableViewCell.self, forCellReuseIdentifier: "cellID")
+
 		
-		view.backgroundColor = .black
-		view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-		view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-		view.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-		view.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+		tableView.backgroundColor = .black
+		
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -34,18 +33,29 @@ class DetailedTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		navigationController?.setNavigationBarHidden(true, animated: false)
-	}
-	
-	func updateWith(forecasts: [Forecast]){
+	func updateWith(forecasts: [[Forecast]], dayToScrollTo: Int){
 		self.forecasts = forecasts
 		
-		DispatchQueue.main.async {
-			self.tableView.reloadData()
-		}
+		tableView.beginUpdates()
+		tableView.reloadData()
+		tableView.endUpdates()
+		
+		scrollTo(day: dayToScrollTo)
 	}
+	
+	func scrollTo(day: Int){
+		for (i,f) in forecasts.enumerated() {
+			if f.first!.date.day! == day {
+				self.tableView.scrollToRow(at: IndexPath(row: NSNotFound, section: i), at: .top
+					, animated: false)
+				return
+			}
+		}
+		
+		print("NotFound")
+		
+	}
+	
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -56,26 +66,33 @@ class DetailedTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+		return forecasts.count - 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return forecasts.count
+        return forecasts[section].count
     }
+	
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let header = TableViewHeader()
+		header.bounds = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.sectionHeaderHeight)
+		header.setUpViews()
+		header.setDayText(components: forecasts[section].first!.date)
+		return header
+	}
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! ForecastTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! DetailedTableViewCell
+		
+		cell.selectionStyle = .none
+		
+		let days = indexPath.section == 0 ? 24 : forecasts[indexPath.section].count
 
-		var f = [Forecast]()
-		f.append(forecasts[indexPath.row])
-		cell.setUpCell(forecast: f)
+
+		cell.setUpCell(forecast: forecasts[indexPath.section][indexPath.row], daysInForecast: days)
 
         return cell
     }
-
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: false)
-	}
 
 }
