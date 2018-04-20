@@ -1,24 +1,39 @@
 //
-//  ForecsatTableViewController.swift
+//  LocationSearchTableViewController.swift
 //  Weather
 //
-//  Created by Simon Kärrman on 2018-03-18.
+//  Created by Simon Kärrman on 2018-04-03.
 //  Copyright © 2018 Simon Kärrman. All rights reserved.
 //
 
 import UIKit
+import os.log
 
-class ForecsatTableViewController: UITableViewController {
+class LocationSearchTableViewController: UITableViewController {
 	
-	var forecasts: [[Forecast]] = [[Forecast]]()
+	var forecastModel: ForecastModel!
+	var savedLocations = [Location]()
+	var locations = [Location]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		self.view.backgroundColor = .black
 		
-		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellId")
-		tableView.rowHeight = 70
-		tableView.sectionHeaderHeight = 0
+		tableView.register(LocationSearchTableViewCell.self, forCellReuseIdentifier: "cell")
+		
+		
+		tableView.backgroundColor = .black
+		
+		tableView.estimatedRowHeight = 50
+		tableView.rowHeight = 50
+		tableView.estimatedSectionHeaderHeight = 30
+		tableView.sectionHeaderHeight = 30
+		
+		guard let saved = loadMeals() else {
+			print("No locations saved")
+			return
+		}
+		savedLocations += saved
+		
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -27,30 +42,6 @@ class ForecsatTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
-	
-	func updateWithForecast(forecasts: [Forecast]) {
-		self.forecasts.removeAll()
-		var index = 0
-		while index < forecasts.count {
-			var fList = [Forecast]()
-			let currentDay = forecasts[index].date.day!
-			while forecasts[index].date.day! == currentDay {
-				fList.append(forecasts[index])
-				index += 1
-				
-				if index >= forecasts.count {
-					break
-				}
-			}
-			self.forecasts.append(fList)
-		}
-		
-		DispatchQueue.main.async {
-			self.tableView.reloadData()
-
-		}
-		
-	}
 	
 
     override func didReceiveMemoryWarning() {
@@ -62,57 +53,84 @@ class ForecsatTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-		return 1
+		return savedLocations.count > 0 ? 2 : 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-//		print(numberOfRows)
-		return forecasts.count < 1 ? 0 : (forecasts.first!.count > 6 ? 5 + forecasts.count - 1 : forecasts.first!.count + forecasts.count - 1)
-		//return forecasts.count
+		if savedLocations.count > 0 {
+			return section == 0 ? savedLocations.count : locations.count
+		}else {
+			return locations.count
+		}
     }
 	
-	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if indexPath.row == 0 {
-			return tableView.bounds.height * 0.2
-		}else{
-			return 70
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let header = LocationSearchHeader()
+		header.setUpViews()
+		if savedLocations.count > 0 {
+			header.label.text = section == 0 ? "Nyligen sökta" : "Sökning"
+		} else {
+			header.label.text = "Sökning"
 		}
+		return header
 	}
+
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-	
-		if indexPath.row == 0 {
-			let todayCell = TodayView()
-			todayCell.updateWith(forecast: forecasts.first!.first!)
-			todayCell.setUpViews()
-			return todayCell
-			
-		}else {
-			
-			let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ForecastTableViewCell
-			if indexPath.row <  ((forecasts.first!.count > 6) ? 6 : forecasts.first!.count) {
-				var f = [Forecast]()
-				f.append(forecasts[0][indexPath.row])
-				cell.setUpCell(forecast: f)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LocationSearchTableViewCell
+
+		// Configure the cell...
+		
+		if savedLocations.count > 0 {
+			if indexPath.section == 0 {
+				cell.cityLabel.text = savedLocations[indexPath.row].name
 			}else {
-				cell.setUpCell(forecast: forecasts[indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)])
+				cell.cityLabel.text = locations[indexPath.row].name
 			}
-			return cell
-        // Configure the cell...
+		}else {
+			cell.cityLabel.text = locations[indexPath.row].name
 		}
-	}
+		
+
+        return cell
+    }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let destination = DetailedViewController()
-		var index = 0
-		if indexPath.row > ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count) {
-			index = indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)
+		let location: Location!
+		if savedLocations.count > 0 && indexPath.section == 1 {
+			location = locations[indexPath.row]
+			savedLocations.append(location)
+			saveLocations()
+		}else if savedLocations.count < 1 {
+			location = locations[indexPath.row]
+			savedLocations.append(location)
+			saveLocations()
+		}else {
+			location = savedLocations[indexPath.row]
 		}
-		destination.detailedTableViewController.updateWith(forecasts: forecasts, dayToScrollTo: forecasts[index].first!.date.day!)
-		navigationController?.pushViewController(destination, animated: true)
+		forecastModel.updateForecast(cityName: location.name, longitude: location.longitude, latitude: location.latitude, distance: 0)
+		self.navigationController?.popViewController(animated: true)
 	}
 	
+	
+	private func saveLocations() {
+		if savedLocations.count < 1 {
+			return
+		}
+		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(savedLocations, toFile: Location.ArchiveURL.path)
+		
+		if isSuccessfulSave {
+			os_log("Locations successfully saved.", log: OSLog.default, type: .debug)
+		} else {
+			os_log("Failed to save locations...", log: OSLog.default, type: .error)
+		}
+	}
+	
+	private func loadMeals() -> [Location]?  {
+		return NSKeyedUnarchiver.unarchiveObject(withFile: Location.ArchiveURL.path) as? [Location]
+	}
+
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

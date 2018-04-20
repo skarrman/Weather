@@ -12,7 +12,7 @@ class TodayView: UITableViewCell {
 	
 	let tempLabel: UILabel = {
 		let label = UILabel()
-		label.textAlignment = .left
+		label.textAlignment = .right
 		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 30)
 		label.adjustsFontSizeToFitWidth = true
@@ -50,7 +50,7 @@ class TodayView: UITableViewCell {
 	}()
 	let windLabel: UILabel = {
 		let label = UILabel()
-		label.textAlignment = .left
+		label.textAlignment = .right
 		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
@@ -106,32 +106,22 @@ class TodayView: UITableViewCell {
 		addSubview(rainLabel)
 		
 		forecastIcon.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-		forecastIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20)
-		forecastIcon.widthAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6).isActive = true
-		forecastIcon.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6).isActive = true
+		forecastIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+		forecastIcon.widthAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7).isActive = true
+		forecastIcon.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7).isActive = true
 		
-		tempLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor,constant: 20).isActive = true
-		tempLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+		tempLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor,constant: -20).isActive = true
+		tempLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
 		tempLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3).isActive = true
-		tempLabel.rightAnchor.constraint(equalTo: forecastIcon.leftAnchor).isActive = true
+		tempLabel.leftAnchor.constraint(equalTo: forecastIcon.rightAnchor).isActive = true
 		
 		dayLabel.topAnchor.constraint(equalTo: forecastIcon.topAnchor).isActive = true
-		dayLabel.leftAnchor.constraint(equalTo: tempLabel.leftAnchor).isActive = true
+		dayLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
 		dayLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
 		dayLabel.rightAnchor.constraint(equalTo: forecastIcon.leftAnchor).isActive = true
 		
-		windIcon.leftAnchor.constraint(equalTo: forecastIcon.rightAnchor, constant: cemterSpaceing).isActive = true
-		windIcon.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
-		windIcon.heightAnchor.constraint(equalToConstant: 30).isActive = true
-		windIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
-		
-		windLabel.leftAnchor.constraint(equalTo: windIcon.rightAnchor, constant: cemterSpaceing).isActive = true
-		windLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -cemterSpaceing).isActive = true
-		windLabel.centerYAnchor.constraint(equalTo: windIcon.centerYAnchor).isActive = true
-		windLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
-		
-		rainDropp.leftAnchor.constraint(equalTo: windIcon.leftAnchor).isActive = true
-		rainDropp.bottomAnchor.constraint(equalTo: windIcon.topAnchor, constant: -cemterSpaceing).isActive = true
+		rainDropp.leftAnchor.constraint(equalTo: dayLabel.leftAnchor).isActive = true
+		rainDropp.bottomAnchor.constraint(equalTo:safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
 		rainDropp.widthAnchor.constraint(equalToConstant: 30).isActive = true
 		rainDropp.heightAnchor.constraint(equalToConstant: 30).isActive = true
 		
@@ -139,6 +129,17 @@ class TodayView: UITableViewCell {
 		rainLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -cemterSpaceing).isActive = true
 		rainLabel.centerYAnchor.constraint(equalTo: rainDropp.centerYAnchor).isActive = true
 		rainLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
+		
+		windLabel.rightAnchor.constraint(equalTo: tempLabel.rightAnchor).isActive = true
+		windLabel.heightAnchor.constraint(equalTo: rainLabel.heightAnchor).isActive = true
+		windLabel.centerYAnchor.constraint(equalTo: rainLabel.centerYAnchor).isActive = true
+		
+		windIcon.rightAnchor.constraint(equalTo: windLabel.leftAnchor, constant: -cemterSpaceing).isActive = true
+		windIcon.centerYAnchor.constraint(equalTo: windLabel.centerYAnchor).isActive = true
+		windIcon.heightAnchor.constraint(equalTo: rainDropp.heightAnchor).isActive = true
+		windIcon.widthAnchor.constraint(equalTo: rainDropp.widthAnchor).isActive = true
+		
+		
 	}
 
 }

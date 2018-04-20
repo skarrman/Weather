@@ -44,8 +44,8 @@ class ForecastModel {
 			
 			//Check for error and response
 			
-			//print(error ?? "No error provided")
-			//print(response ?? "No response provided")
+//			print(error ?? "No error provided")
+//			print(response ?? "No response provided")
 			
 			guard let httpResponse = response as! HTTPURLResponse? else{print("Not a HTTP");return}
 			print("StatusCode:",httpResponse.statusCode)

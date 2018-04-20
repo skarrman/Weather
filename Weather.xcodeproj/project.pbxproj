@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7E0D1C44205547DC0069AD2B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E0D1C43205547DC0069AD2B /* Launch Screen.storyboard */; };
 		7E18B6372034261C00167CC2 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7E18B6362034261C00167CC2 /* .gitignore */; };
+		7E1ADCBB207384CC008F0166 /* LocationSearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1ADCBA207384CC008F0166 /* LocationSearchResultController.swift */; };
+		7E1ADCBD2073BCFD008F0166 /* LocationSearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1ADCBC2073BCFD008F0166 /* LocationSearchTableViewController.swift */; };
+		7E1ADCBF2073BD49008F0166 /* LocationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1ADCBE2073BD49008F0166 /* LocationSearchTableViewCell.swift */; };
 		7E2F08ED206E621000BCDECF /* TableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08EC206E621000BCDECF /* TableViewHeader.swift */; };
 		7E2F08EF206FA87500BCDECF /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */; };
 		7E2F08F12072529900BCDECF /* DetailedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */; };
@@ -19,6 +22,8 @@
 		7E78BCA42056DDCA003AFE81 /* LocationServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E78BCA32056DDCA003AFE81 /* LocationServices.swift */; };
 		7E889AC42061968600A54BCD /* IconHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E889AC32061968600A54BCD /* IconHandler.swift */; };
 		7E889AC6206E1BCE00A54BCD /* DetailedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E889AC5206E1BCE00A54BCD /* DetailedTableViewController.swift */; };
+		7E92B519207E143A00143D44 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E92B518207E143A00143D44 /* Location.swift */; };
+		7EA83B80208A3AE90078DD5C /* LocationSearchHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA83B7F208A3AE90078DD5C /* LocationSearchHeader.swift */; };
 		7EAD41482047DC8100DA4554 /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAD41472047DC8100DA4554 /* Forecast.swift */; };
 		7EFDE01F2030753300486AA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFDE01E2030753300486AA7 /* AppDelegate.swift */; };
 		7EFDE0212030753300486AA7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFDE0202030753300486AA7 /* MainViewController.swift */; };
@@ -28,6 +33,9 @@
 /* Begin PBXFileReference section */
 		7E0D1C43205547DC0069AD2B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7E18B6362034261C00167CC2 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		7E1ADCBA207384CC008F0166 /* LocationSearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchResultController.swift; sourceTree = "<group>"; };
+		7E1ADCBC2073BCFD008F0166 /* LocationSearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchTableViewController.swift; sourceTree = "<group>"; };
+		7E1ADCBE2073BD49008F0166 /* LocationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchTableViewCell.swift; sourceTree = "<group>"; };
 		7E2F08EC206E621000BCDECF /* TableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHeader.swift; sourceTree = "<group>"; };
 		7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
 		7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedTableViewCell.swift; sourceTree = "<group>"; };
@@ -38,6 +46,8 @@
 		7E78BCA32056DDCA003AFE81 /* LocationServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
 		7E889AC32061968600A54BCD /* IconHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHandler.swift; sourceTree = "<group>"; };
 		7E889AC5206E1BCE00A54BCD /* DetailedTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedTableViewController.swift; sourceTree = "<group>"; };
+		7E92B518207E143A00143D44 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		7EA83B7F208A3AE90078DD5C /* LocationSearchHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchHeader.swift; sourceTree = "<group>"; };
 		7EAD41472047DC8100DA4554 /* Forecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		7EFDE01B2030753300486AA7 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFDE01E2030753300486AA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +103,11 @@
 				7E2F08EC206E621000BCDECF /* TableViewHeader.swift */,
 				7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */,
 				7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */,
+				7E1ADCBA207384CC008F0166 /* LocationSearchResultController.swift */,
+				7E1ADCBC2073BCFD008F0166 /* LocationSearchTableViewController.swift */,
+				7E1ADCBE2073BD49008F0166 /* LocationSearchTableViewCell.swift */,
+				7E92B518207E143A00143D44 /* Location.swift */,
+				7EA83B7F208A3AE90078DD5C /* LocationSearchHeader.swift */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -174,10 +189,15 @@
 				7E2F08EF206FA87500BCDECF /* DetailedViewController.swift in Sources */,
 				7EFDE0212030753300486AA7 /* MainViewController.swift in Sources */,
 				7E6D7275205BA81700F61327 /* TodayView.swift in Sources */,
+				7EA83B80208A3AE90078DD5C /* LocationSearchHeader.swift in Sources */,
+				7E92B519207E143A00143D44 /* Location.swift in Sources */,
 				7E6D7277205EF1E600F61327 /* ForecsatTableViewController.swift in Sources */,
 				7E2F08ED206E621000BCDECF /* TableViewHeader.swift in Sources */,
+				7E1ADCBD2073BCFD008F0166 /* LocationSearchTableViewController.swift in Sources */,
 				7E889AC42061968600A54BCD /* IconHandler.swift in Sources */,
 				7E2F08F12072529900BCDECF /* DetailedTableViewCell.swift in Sources */,
+				7E1ADCBF2073BD49008F0166 /* LocationSearchTableViewCell.swift in Sources */,
+				7E1ADCBB207384CC008F0166 /* LocationSearchResultController.swift in Sources */,
 				7E403F5D204FC70700329A8C /* ForecastModel.swift in Sources */,
 				7E889AC6206E1BCE00A54BCD /* DetailedTableViewController.swift in Sources */,
 				7E78BCA42056DDCA003AFE81 /* LocationServices.swift in Sources */,

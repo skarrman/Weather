@@ -68,21 +68,21 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 			}
 		}
 		
-//		let geocoder = CLGeocoder()
-//
-//		geocoder.geocodeAddressString("Hemsjö") { (placemarks, error) in
-//			
-//			if error == nil {
-//				if let location = placemarks?.first {
-//					print("City: ", location.locality ?? "No city")
-//					print("Coordinates: ", location.location?.coordinate ?? "No coordinates")
-//				}
-//			}
-//			return
-//		}
+		let geocoder = CLGeocoder()
+
+		geocoder.geocodeAddressString("Göteborg") { (placemarks, error) in
+			
+			if error == nil {
+				for location in placemarks!{
+					print("City: ", location.locality ?? "No city")
+					print("Coordinates: ", location.location?.coordinate ?? "No coordinates")
+				}
+			}
+			return
+		}
 		
-//		print("user latitude = \(userLocation.coordinate.latitude)")
-//		print("user longitude = \(userLocation.coordinate.longitude)")
+		print("user latitude = \(userLocation.coordinate.latitude)")
+		print("user longitude = \(userLocation.coordinate.longitude)")
 		
 
 	}
