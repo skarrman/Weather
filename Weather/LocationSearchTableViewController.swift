@@ -100,7 +100,7 @@ class LocationSearchTableViewController: UITableViewController {
 		let location: Location!
 		if savedLocations.count > 0 && indexPath.section == 1 {
 			location = locations[indexPath.row]
-			savedLocations.append(location)
+			addToSaved(location: location)
 			saveLocations()
 		}else if savedLocations.count < 1 {
 			location = locations[indexPath.row]
@@ -108,9 +108,37 @@ class LocationSearchTableViewController: UITableViewController {
 			saveLocations()
 		}else {
 			location = savedLocations[indexPath.row]
+			addToSaved(location: location)
+			saveLocations()
 		}
 		forecastModel.updateForecast(cityName: location.name, longitude: location.longitude, latitude: location.latitude, distance: 0)
 		self.navigationController?.popViewController(animated: true)
+	}
+	
+	private func addToSaved(location: Location) {
+		savedLocations.append(savedLocations[savedLocations.count-1])
+		let size = savedLocations.count-1
+		for i in 0..<size {
+			savedLocations[size - i] = savedLocations[size - i - 1]
+		}
+		
+		removeFromSaved(location: location)
+		
+		savedLocations[0] = location
+		if savedLocations.count > 5 {
+			savedLocations.remove(at: 5)
+		}
+	}
+	
+	private func removeFromSaved(location: Location){
+		var removed = 0
+		for var i in 1..<savedLocations.count - removed {
+			if savedLocations[i].name == location.name {
+				savedLocations.remove(at: i)
+				i -= 1
+				removed += 1
+			}
+		}
 	}
 	
 	
