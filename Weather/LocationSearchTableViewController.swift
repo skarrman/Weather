@@ -131,12 +131,17 @@ class LocationSearchTableViewController: UITableViewController {
 	}
 	
 	private func removeFromSaved(location: Location){
-		var removed = 0
-		for var i in 1..<savedLocations.count - removed {
+		var i = 0
+		while(true){
+			print("i: \(i)")
 			if savedLocations[i].name == location.name {
 				savedLocations.remove(at: i)
 				i -= 1
-				removed += 1
+				//removed += 1
+			}
+			i += 1
+			if i == savedLocations.count {
+				break
 			}
 		}
 	}

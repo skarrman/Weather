@@ -12,6 +12,7 @@ import MapKit
 class LocationSearchResultController: UIViewController, UISearchResultsUpdating {
 	
 	let locationSearchTableView: LocationSearchTableViewController = LocationSearchTableViewController()
+	var locationServices: LocationServices!
 	
 	var heightAnchor: NSLayoutConstraint!
 
@@ -39,18 +40,38 @@ class LocationSearchResultController: UIViewController, UISearchResultsUpdating 
 		
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
+		
+		let image = #imageLiteral(resourceName: "LocationIcon")
+		let button: UIButton = {
+			let button = UIButton(type: .custom)
+			button.setImage(image, for: .normal)
+			button.addTarget(self, action: #selector(self.userLocation), for: .touchUpInside)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+		}()
+		
+		button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+		button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+		
+		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+
 
 		
 		
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		
-		DispatchQueue.main.async {
-			self.navigationItem.searchController?.searchBar.becomeFirstResponder()
-		}
+	@objc func userLocation(){
+		locationServices.determineMyLocation()
+		self.navigationController?.popViewController(animated: true)
 	}
+	
+//	override func viewDidAppear(_ animated: Bool) {
+//		super.viewDidAppear(animated)
+//		
+//		DispatchQueue.main.async {
+//			self.navigationItem.searchController?.searchBar.becomeFirstResponder()
+//		}
+//	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

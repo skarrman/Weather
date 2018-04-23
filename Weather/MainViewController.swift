@@ -73,6 +73,7 @@ class MainViewController: UIViewController {
 	@objc private func goToLocationSeach(){
 		let locationSearchContreoller = LocationSearchResultController()
 		locationSearchContreoller.locationSearchTableView.forecastModel = forecastModel
+		locationSearchContreoller.locationServices = locationServices
 		navigationController?.pushViewController(locationSearchContreoller, animated: true)
 	}
 
