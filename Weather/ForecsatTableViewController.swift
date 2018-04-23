@@ -68,7 +68,7 @@ class ForecsatTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
 //		print(numberOfRows)
-		return forecasts.count < 1 ? 0 : (forecasts.first!.count > 6 ? 5 + forecasts.count - 1 : forecasts.first!.count + forecasts.count - 1)
+		return forecasts.count < 1 ? 0 : (forecasts.first!.count > 6 ? 5 + forecasts.count - 1 : forecasts.first!.count + forecasts.count - 2)
 		//return forecasts.count
     }
 	
@@ -91,12 +91,13 @@ class ForecsatTableViewController: UITableViewController {
 		}else {
 			
 			let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ForecastTableViewCell
-			if indexPath.row <  ((forecasts.first!.count > 6) ? 6 : forecasts.first!.count) {
+			if indexPath.row < ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count) {
 				var f = [Forecast]()
 				f.append(forecasts[0][indexPath.row])
 				cell.setUpCell(forecast: f)
 			}else {
-				cell.setUpCell(forecast: forecasts[indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)])
+//				print(indexPath.row, indexPath.row - forecasts.first!.count - 1)
+				cell.setUpCell(forecast: forecasts[indexPath.row - ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count - 1)])
 			}
 			return cell
         // Configure the cell...
