@@ -11,6 +11,15 @@ import UIKit
 class ForecsatTableViewController: UITableViewController {
 	
 	var forecasts: [[Forecast]] = [[Forecast]]()
+	
+		var activityIndicatorView: UIActivityIndicatorView = {
+			let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+			view.translatesAutoresizingMaskIntoConstraints = false
+			view.hidesWhenStopped = true
+			return view
+		}()
+	
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +28,14 @@ class ForecsatTableViewController: UITableViewController {
 		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellId")
 		tableView.rowHeight = 70
 		tableView.sectionHeaderHeight = 0
+		
+		tableView.estimatedRowHeight = 70
+		tableView.estimatedSectionHeaderHeight = 0
+		
+		tableView.addSubview(activityIndicatorView)
+		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+		
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -27,8 +44,15 @@ class ForecsatTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
+	func startRefreshing() {
+		tableView.separatorStyle = .none
+		activityIndicatorView.startAnimating()
+		
+	}
+	
 	
 	func updateWithForecast(forecasts: [Forecast]) {
+		
 		self.forecasts.removeAll()
 		var index = 0
 		while index < forecasts.count {
@@ -46,8 +70,9 @@ class ForecsatTableViewController: UITableViewController {
 		}
 		
 		DispatchQueue.main.async {
+			self.activityIndicatorView.stopAnimating()
+			self.tableView.separatorStyle = .singleLine
 			self.tableView.reloadData()
-
 		}
 		
 	}
@@ -107,8 +132,8 @@ class ForecsatTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let destination = DetailedViewController()
 		var index = 0
-		if indexPath.row > ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count) {
-			index = indexPath.row - ((forecasts.first!.count > 6) ? 5 : forecasts.first!.count)
+		if indexPath.row > ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count) {
+			index = indexPath.row - ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count)
 		}
 		destination.detailedTableViewController.updateWith(forecasts: forecasts, dayToScrollTo: forecasts[index].first!.date.day!)
 		navigationController?.pushViewController(destination, animated: true)

@@ -20,15 +20,9 @@ class MainViewController: UIViewController {
 		tableViewController.tableView.translatesAutoresizingMaskIntoConstraints = false
 		return tableViewController
 	}()
-	var activityIndicatorView: UIActivityIndicatorView = {
-		let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.hidesWhenStopped = true
-		return view
-	}()
-	
+
 	let searchResultController: LocationSearchResultController = LocationSearchResultController()
-	
+	var currentLocation: Location!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -39,7 +33,7 @@ class MainViewController: UIViewController {
 		forecastModel = ForecastModel()
 		locationServices = LocationServices(forecastModel: forecastModel)
 		self.view.addSubview(forecastTableView.view)
-		self.view.addSubview(activityIndicatorView)
+//		self.view.addSubview(activityIndicatorView)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
 		let image = #imageLiteral(resourceName: "SearchIcon")
@@ -61,7 +55,7 @@ class MainViewController: UIViewController {
 		self.title = ""
 		
 		//Init UI elements
-		initActivityIndicator()
+//		initActivityIndicator()
 		initTableView()
 	}
 	
@@ -76,21 +70,30 @@ class MainViewController: UIViewController {
 		locationSearchContreoller.locationServices = locationServices
 		navigationController?.pushViewController(locationSearchContreoller, animated: true)
 	}
+	
+	func refreshForecast(){
+		forecastTableView.startRefreshing()
+		if currentLocation != nil {
+			forecastModel.updateForecast(location: currentLocation)
+		}else{
+			startUpdatingForecast()
+		}
+	}
 
 	
 	@objc func forecastUpdated(){
 		let forecasts = forecastModel.getForecasts()
-		let cityName = forecastModel.getCityName()
+		currentLocation = forecastModel.getLocation()
 		
 		forecastTableView.updateWithForecast(forecasts: forecasts)
 		DispatchQueue.main.async {
-			self.title = cityName
+			self.title = self.currentLocation.name
 			//self.navigationController?.navigationBar.prefersLargeTitles = true
 			//self.viewDidLoad()
 			
-			if self.activityIndicatorView.isAnimating {
-				self.activityIndicatorView.stopAnimating()
-			}
+//			if self.activityIndicatorView.isAnimating {
+//				self.activityIndicatorView.stopAnimating()
+//			}
 		}
 		
 	}
@@ -105,12 +108,7 @@ class MainViewController: UIViewController {
 		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
 	}
 	
-	func initActivityIndicator() {
-		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-		activityIndicatorView.startAnimating()
-	}
-	
+
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()

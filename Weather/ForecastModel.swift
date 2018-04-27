@@ -11,27 +11,27 @@ import Foundation
 class ForecastModel {
 	
 	private var forecasts: [Forecast]!
-	private var cityName: String!
+	private var location: Location!
 	private var referenceTime: Date?
 	
 	func getForecasts() -> [Forecast]{
 		return forecasts
 	}
 	
-	func getCityName() -> String {
-		return cityName
+	func getLocation() -> Location {
+		return location
 	}
 	
-	func updateForecast(cityName: String, longitude: Double, latitude: Double, distance: Double){
+	func updateForecast(location: Location){
 		let decimals = 1000000.0
-		let long = (longitude * decimals).rounded() / decimals
-		let lat = (latitude * decimals).rounded() / decimals
+		let long = (location.longitude * decimals).rounded() / decimals
+		let lat = (location.latitude * decimals).rounded() / decimals
 		
 		
 //		if !isTimeForNewForecast() && !userHasMoved(distance: distance) {
 //			return
 //		}
-		self.cityName = cityName
+		self.location = location
 		
 		//Ryd test url
 		//let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/12.5033/lat/57.8579/data.json"

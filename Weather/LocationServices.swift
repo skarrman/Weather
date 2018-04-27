@@ -44,21 +44,13 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 		
 		let reverseGeocoder = CLGeocoder()
 		
-		var distance: CLLocationDistance
-		
-		if lastLocation != nil {
-			distance = lastLocation!.distance(from: userLocation)
-		}else{
-			distance = -1
-		}
 
 		reverseGeocoder.reverseGeocodeLocation(userLocation ){ (placemarks, error) in
 			if error == nil {
 				let firstLocation = placemarks?[0]
 				let cityName = firstLocation!.locality!
-				
-				self.forecastModel.updateForecast(cityName: cityName, longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude, distance: distance)
-				self.lastLocation = userLocation
+				let l = Location(name: cityName, longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
+				self.forecastModel.updateForecast(location: l)
 				return
 				
 			}

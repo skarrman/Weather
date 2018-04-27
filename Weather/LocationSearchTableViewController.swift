@@ -33,13 +33,6 @@ class LocationSearchTableViewController: UITableViewController {
 			return
 		}
 		savedLocations += saved
-		
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
 	
@@ -91,12 +84,11 @@ class LocationSearchTableViewController: UITableViewController {
 		}else {
 			cell.cityLabel.text = locations[indexPath.row].name
 		}
-		
-
         return cell
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		print("Before",savedLocations)
 		let location: Location!
 		if savedLocations.count > 0 && indexPath.section == 1 {
 			location = locations[indexPath.row]
@@ -106,16 +98,19 @@ class LocationSearchTableViewController: UITableViewController {
 			location = locations[indexPath.row]
 			savedLocations.append(location)
 			saveLocations()
-		}else {
+		}else if indexPath.row == 0 {
+			location = savedLocations[indexPath.row]
+		}else{
 			location = savedLocations[indexPath.row]
 			addToSaved(location: location)
 			saveLocations()
 		}
-		forecastModel.updateForecast(cityName: location.name, longitude: location.longitude, latitude: location.latitude, distance: 0)
+		forecastModel.updateForecast(location: location)
 		self.navigationController?.popViewController(animated: true)
 	}
 	
 	private func addToSaved(location: Location) {
+		print("After",savedLocations)
 		savedLocations.append(savedLocations[savedLocations.count-1])
 		let size = savedLocations.count-1
 		for i in 0..<size {
@@ -132,8 +127,7 @@ class LocationSearchTableViewController: UITableViewController {
 	
 	private func removeFromSaved(location: Location){
 		var i = 0
-		while(true){
-			print("i: \(i)")
+		while true {
 			if savedLocations[i].name == location.name {
 				savedLocations.remove(at: i)
 				i -= 1
@@ -163,50 +157,5 @@ class LocationSearchTableViewController: UITableViewController {
 	private func loadMeals() -> [Location]?  {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Location.ArchiveURL.path) as? [Location]
 	}
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

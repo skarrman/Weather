@@ -37,6 +37,7 @@ class LocationSearchResultController: UIViewController, UISearchResultsUpdating 
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.placeholder = "Sök plats"
 		navigationItem.searchController = searchController
+		searchController.searchBar.keyboardAppearance = .dark
 		
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
