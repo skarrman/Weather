@@ -28,7 +28,7 @@ class LocationSearchTableViewController: UITableViewController {
 		tableView.estimatedSectionHeaderHeight = 30
 		tableView.sectionHeaderHeight = 30
 		
-		guard let saved = loadMeals() else {
+		guard let saved = loadLocations() else {
 			print("No locations saved")
 			return
 		}
@@ -154,7 +154,7 @@ class LocationSearchTableViewController: UITableViewController {
 		}
 	}
 	
-	private func loadMeals() -> [Location]?  {
+	private func loadLocations() -> [Location]?  {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Location.ArchiveURL.path) as? [Location]
 	}
 

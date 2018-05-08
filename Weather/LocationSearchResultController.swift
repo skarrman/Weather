@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import GooglePlaces
 
 class LocationSearchResultController: UIViewController, UISearchResultsUpdating {
 	

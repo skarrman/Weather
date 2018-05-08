@@ -40,7 +40,7 @@ class MainViewController: UIViewController {
 		let button: UIButton = {
 			let button = UIButton(type: .custom)
 			button.setImage(image, for: .normal)
-			button.addTarget(self, action: #selector(self.goToLocationSeach), for: .touchUpInside)
+			button.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
 			button.translatesAutoresizingMaskIntoConstraints = false
 			return button
 		}()
@@ -69,6 +69,13 @@ class MainViewController: UIViewController {
 		locationSearchContreoller.locationSearchTableView.forecastModel = forecastModel
 		locationSearchContreoller.locationServices = locationServices
 		navigationController?.pushViewController(locationSearchContreoller, animated: true)
+	}
+	
+	@objc private func goToPlacesSearch(){
+		let placesSearchViewController = SearchViewController()
+		placesSearchViewController.locationServices = locationServices
+		placesSearchViewController.searchTableView.forecastModel = forecastModel
+		navigationController?.pushViewController(placesSearchViewController, animated: true)
 	}
 	
 	func refreshForecast(){
