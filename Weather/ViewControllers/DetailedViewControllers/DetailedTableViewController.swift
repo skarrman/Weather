@@ -46,8 +46,7 @@ class DetailedTableViewController: UITableViewController {
 	func scrollTo(day: Int){
 		for (i,f) in forecasts.enumerated() {
 			if f.first!.date.day! == day {
-				self.tableView.scrollToRow(at: IndexPath(row: NSNotFound, section: i), at: .top
-					, animated: false)
+				self.tableView.scrollToRow(at: IndexPath(row: NSNotFound, section: i), at: .top, animated: false)
 				return
 			}
 		}

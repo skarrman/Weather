@@ -18,6 +18,8 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 		self.title = "Sök prognos"
 		
+		self.view.backgroundColor = .black
+		
 		let imageView: UIImageView = UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_non_white"))
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(imageView)
@@ -77,7 +79,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
     }
 	
 	func updateSearchResults(for searchController: UISearchController) {
-		if searchController.searchBar.text!.count > 2 {
+		if searchController.searchBar.text!.count > 0 {
 			let googleClient = GMSPlacesClient.shared()
 			let filter = GMSAutocompleteFilter()
 			
@@ -108,6 +110,9 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 				}
 				
 			})
+		}else {
+			self.searchTableView.searchedPlaces.removeAll()
+			self.searchTableView.tableView.reloadData()
 		}
 	}
 }

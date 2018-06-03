@@ -132,8 +132,9 @@ class ForecsatTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let destination = DetailedViewController()
 		var index = 0
-		if indexPath.row > ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count) {
-			index = indexPath.row - ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count)
+		if indexPath.row > ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count - 1) {
+			index = indexPath.row - ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count - 1)
+			print(forecasts[index].first!.date.day!)
 		}
 		destination.detailedTableViewController.updateWith(forecasts: forecasts, dayToScrollTo: forecasts[index].first!.date.day!)
 		navigationController?.pushViewController(destination, animated: true)

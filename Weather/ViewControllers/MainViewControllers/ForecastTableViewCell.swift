@@ -188,8 +188,8 @@ class ForecastTableViewCell: UITableViewCell {
 			lowTempLabel.heightAnchor.constraint(equalTo: rightCenterView.heightAnchor).isActive = true
 			
 			let temps = getTemps(forecasts: forecast)
-			highTempLabel.text = "\(Int(temps.0.rounded()))°"
-			lowTempLabel.text = "\(Int(temps.1.rounded()))°"
+			highTempLabel.text = "\(Int(temps.0))°"
+			lowTempLabel.text = "\(Int(temps.1))°"
 			
 		}else {
 			lowTempLabel.text = ""

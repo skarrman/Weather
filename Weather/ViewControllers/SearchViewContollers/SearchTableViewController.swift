@@ -49,25 +49,25 @@ class SearchTableViewController: UITableViewController {
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		// #warning Incomplete implementation, return the number of sections
-		return savedLocations.count > 0 ? 2 : 1
+		return 1
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
-		if savedLocations.count > 0 {
-			return section == 0 ? savedLocations.count : searchedPlaces.count
-		}else {
+		if searchedPlaces.count > 0 {
 			return searchedPlaces.count
+		}else {
+			return savedLocations.count
 		}
 	}
 	
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let header = LocationSearchHeader()
 		header.setUpViews()
-		if savedLocations.count > 0 {
-			header.label.text = section == 0 ? "Nyligen sökta" : "Sökning"
-		} else {
+		if searchedPlaces.count > 0 {
 			header.label.text = "Sökning"
+		}else {
+			header.label.text = "Senast sökta"
 		}
 		return header
 	}
@@ -78,32 +78,43 @@ class SearchTableViewController: UITableViewController {
 		
 		// Configure the cell...
 		
-		if savedLocations.count > 0 {
-			if indexPath.section == 0 {
-				cell.cityLabel.text = savedLocations[indexPath.row].name
-			}else {
-				cell.cityLabel.attributedText = searchedPlaces[indexPath.row].string
-			}
-		}else {
+		if searchedPlaces.count > 0 {
 			cell.cityLabel.attributedText = searchedPlaces[indexPath.row].string
+		}else {
+			cell.cityLabel.text = savedLocations[indexPath.row].name
 		}
 		return cell
 	}
 	
+//	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//		print("Before",savedLocations)
+//		if savedLocations.count > 0 && indexPath.section == 0 {
+//			var location: Location!
+//			if indexPath.row == 0 {
+//				location = savedLocations[indexPath.row]
+//			}else{
+//				location = savedLocations[indexPath.row]
+//				addToSaved(location: location)
+//				saveLocations()
+//			}
+//			forecastModel.updateForecast(location: location)
+//			navigationController?.popViewController(animated: true)
+//		}else{
+//			let client = GMSPlacesClient.shared()
+//			client.lookUpPlaceID(searchedPlaces[indexPath.row].placeID) { (place, error) in
+//				if place != nil {
+//					let location = Location(name: place!.name, longitude: place!.coordinate.longitude, latitude: place!.coordinate.latitude)
+//					self.addToSaved(location: location)
+//					self.saveLocations()
+//					self.forecastModel.updateForecast(location: location)
+//					self.navigationController?.popViewController(animated: true)
+//				}
+//			}
+//		}
+//	}
+	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		print("Before",savedLocations)
-		if savedLocations.count > 0 && indexPath.section == 0 {
-			var location: Location!
-			if indexPath.row == 0 {
-				location = savedLocations[indexPath.row]
-			}else{
-				location = savedLocations[indexPath.row]
-				addToSaved(location: location)
-				saveLocations()
-			}
-			forecastModel.updateForecast(location: location)
-			navigationController?.popViewController(animated: true)
-		}else{
+		if searchedPlaces.count > 0 {
 			let client = GMSPlacesClient.shared()
 			client.lookUpPlaceID(searchedPlaces[indexPath.row].placeID) { (place, error) in
 				if place != nil {
@@ -114,9 +125,19 @@ class SearchTableViewController: UITableViewController {
 					self.navigationController?.popViewController(animated: true)
 				}
 			}
+		} else {
+			var location: Location!
+			if indexPath.row == 0 {
+				location = savedLocations[indexPath.row]
+			}else{
+				location = savedLocations[indexPath.row]
+				addToSaved(location: location)
+				saveLocations()
+			}
+			forecastModel.updateForecast(location: location)
+			navigationController?.popViewController(animated: true)
 		}
 	}
-	
 	private func addToSaved(location: Location) {
 		print("After",savedLocations)
 		if savedLocations.count == 0 {
