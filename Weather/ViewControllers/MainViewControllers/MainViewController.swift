@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
 		return tableViewController
 	}()
 
-	let searchResultController: LocationSearchResultController = LocationSearchResultController()
+//	let searchResultController: LocationSearchResultController = LocationSearchResultController()
 	var currentLocation: Location!
 	
 	override func viewDidLoad() {
@@ -63,13 +63,7 @@ class MainViewController: UIViewController {
 		//updated = false
 		locationServices.determineMyLocation()
 	}
-	
-	@objc private func goToLocationSeach(){
-		let locationSearchContreoller = LocationSearchResultController()
-		locationSearchContreoller.locationSearchTableView.forecastModel = forecastModel
-		locationSearchContreoller.locationServices = locationServices
-		navigationController?.pushViewController(locationSearchContreoller, animated: true)
-	}
+
 	
 	@objc private func goToPlacesSearch(){
 		let placesSearchViewController = SearchViewController()
