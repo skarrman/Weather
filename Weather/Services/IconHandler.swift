@@ -13,19 +13,19 @@ struct IconHandler {
 	static func getForecastIcon(symbol: Symbol) -> UIImage {
 		switch symbol {
 		case .clearSky:
-			return #imageLiteral(resourceName: "Sun")
+			return #imageLiteral(resourceName: "Sun").withRenderingMode(.alwaysTemplate)
 		case .nearlyClearSky, .variableCloudiness, .halfclearSky:
-			return #imageLiteral(resourceName: "SunCloud")
+			return #imageLiteral(resourceName: "SunCloud").withRenderingMode(.alwaysTemplate)
 		case .cloudySky, .overcast:
-			return #imageLiteral(resourceName: "Cloud")
+			return #imageLiteral(resourceName: "Cloud").withRenderingMode(.alwaysTemplate)
 		case .fog:
-			return #imageLiteral(resourceName: "Fog")
+			return #imageLiteral(resourceName: "Fog").withRenderingMode(.alwaysTemplate)
 		case .lightRainShowers, .moderateRainShowers, .heavyRainShowers, .lightSleetShowers, .moderateSleetShowers, .heavySleetShowers, .lightRain, .moderateRain, .heavyRain, .lightSleet, .moderateSleet, .heavySleet:
-			return #imageLiteral(resourceName: "Rain")
+			return #imageLiteral(resourceName: "Rain").withRenderingMode(.alwaysTemplate)
 		case .lightSnowShowers, .moderateSnowShowers, .heavySnowShowers, .lightSnowfall, .moderateSnowfall, .heavySnowfall:
-			return #imageLiteral(resourceName: "Snow")
+			return #imageLiteral(resourceName: "Snow").withRenderingMode(.alwaysTemplate)
 		case .thunder, .thunderstorm:
-			return #imageLiteral(resourceName: "Thunder")
+			return #imageLiteral(resourceName: "Thunder").withRenderingMode(.alwaysTemplate)
 		}
 	}
 }

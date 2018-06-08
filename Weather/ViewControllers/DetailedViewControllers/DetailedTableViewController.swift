@@ -23,7 +23,7 @@ class DetailedTableViewController: UITableViewController {
 		tableView.register(DetailedTableViewCell.self, forCellReuseIdentifier: "cellID")
 
 		
-		tableView.backgroundColor = .black
+		tableView.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
 		
 
         // Uncomment the following line to preserve selection between presentations

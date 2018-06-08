@@ -23,7 +23,6 @@ class ForecsatTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		self.view.backgroundColor = .black
 		
 		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellId")
 		tableView.rowHeight = 70
@@ -43,6 +42,11 @@ class ForecsatTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+	
+	func applyTheme(){
+		self.view.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
+		self.tableView.reloadData()
+	}
 	
 	func startRefreshing() {
 		tableView.separatorStyle = .none

@@ -11,7 +11,6 @@ import UIKit
 class LocationSearchHeader: UIView {
 	let label: UILabel = {
 		let label = UILabel()
-		label.textColor = .black
 		label.textAlignment = .left
 		label.font = UIFont.boldSystemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
@@ -22,7 +21,9 @@ class LocationSearchHeader: UIView {
 	}()
 	
 	func setUpViews(){
-		backgroundColor = .white
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		backgroundColor = theme.textColor
+		label.textColor = theme.backgroundColor
 		addSubview(label)
 		label.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 20).isActive = true
 		label.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true

@@ -21,7 +21,7 @@ class DetailedViewController: UIViewController {
 	
 	
 		navigationItem.largeTitleDisplayMode = .always
-		view.backgroundColor = .black
+		view.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
 		
 		
 		

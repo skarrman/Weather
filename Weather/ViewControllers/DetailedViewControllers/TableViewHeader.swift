@@ -12,7 +12,6 @@ class TableViewHeader: UIView{
 	
 	let dayLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .black
 		label.textAlignment = .left
 		label.font = UIFont.boldSystemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
@@ -46,7 +45,10 @@ class TableViewHeader: UIView{
 	}
 	
 	func setUpViews(){
-		backgroundColor = .white
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		
+		backgroundColor = theme.textColor
+		dayLabel.textColor = theme.backgroundColor
 		addSubview(dayLabel)
 		dayLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 20).isActive = true
 		dayLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true

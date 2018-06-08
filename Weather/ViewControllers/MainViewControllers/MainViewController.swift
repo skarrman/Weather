@@ -20,14 +20,30 @@ class MainViewController: UIViewController {
 		tableViewController.tableView.translatesAutoresizingMaskIntoConstraints = false
 		return tableViewController
 	}()
+	
+	let searchButton: UIButton = {
+		let image = #imageLiteral(resourceName: "SearchIcon")
+		let renderedImage = image.withRenderingMode(.alwaysTemplate)
+		let button = UIButton(type: .custom)
+		button.setImage(renderedImage, for: .normal)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		return button
+	}()
+	
+	let themebutton: UIButton = {
+		let image = #imageLiteral(resourceName: "Fog")
+		let renderedImage = image.withRenderingMode(.alwaysTemplate)
+		let button = UIButton(type: .custom)
+		button.setImage(renderedImage, for: .normal)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		return button
+	}()
 
 //	let searchResultController: LocationSearchResultController = LocationSearchResultController()
 	var currentLocation: Location!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .black
-		
 		
 		_ = UINavigationController(rootViewController: self)
 		forecastModel = ForecastModel()
@@ -36,27 +52,49 @@ class MainViewController: UIViewController {
 //		self.view.addSubview(activityIndicatorView)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
-		let image = #imageLiteral(resourceName: "SearchIcon")
-		let button: UIButton = {
-			let button = UIButton(type: .custom)
-			button.setImage(image, for: .normal)
-			button.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
-			button.translatesAutoresizingMaskIntoConstraints = false
-			return button
-		}()
 		
-		button.widthAnchor.constraint(equalToConstant: 25).isActive = true
-		button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+		searchButton.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
+		themebutton.addTarget(self, action: #selector(self.changeTheme), for: .touchUpInside)
 		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+		searchButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+		searchButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+		
+		themebutton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+		themebutton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+		
+		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
+		navigationItem.leftBarButtonItem = UIBarButtonItem(customView: themebutton)
 		
 		
 		
 		self.title = ""
-		
 		//Init UI elements
 //		initActivityIndicator()
 		initTableView()
+		applyTheme()
+	}
+	
+	@objc func changeTheme(){
+		let handler = ThemeHandler.getInstance()
+		if view.backgroundColor == .black {
+			handler.changeTheme(to: .white)
+		}else {
+			handler.changeTheme(to: .black)
+		}
+		let theme = handler.getCurrentTheme()
+		UIApplication.shared.statusBarStyle = theme.statusBarStyle
+		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
+		navigationController?.navigationBar.tintColor = theme.textColor
+		navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		applyTheme()
+	}
+	
+	func applyTheme(){
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		view.backgroundColor = theme.backgroundColor
+		searchButton.tintColor = theme.iconColor
+		themebutton.tintColor = theme.iconColor
+		forecastTableView.applyTheme()
 	}
 	
 	func startUpdatingForecast(){

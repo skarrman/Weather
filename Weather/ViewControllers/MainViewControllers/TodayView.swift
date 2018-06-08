@@ -13,7 +13,6 @@ class TodayView: UITableViewCell {
 	let tempLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .right
-		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 30)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
@@ -24,7 +23,6 @@ class TodayView: UITableViewCell {
 	let dayLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .left
-		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
@@ -35,7 +33,6 @@ class TodayView: UITableViewCell {
 	let rainLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .left
-		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
@@ -44,14 +41,13 @@ class TodayView: UITableViewCell {
 		return label
 	}()
 	let rainDropp: UIImageView = {
-		let imageView = UIImageView(image: #imageLiteral(resourceName: "RainDropp"))
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "RainDropp").withRenderingMode(.alwaysTemplate))
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		return imageView
 	}()
 	let windLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .right
-		label.textColor = .white
 		label.font = UIFont.systemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
@@ -60,7 +56,7 @@ class TodayView: UITableViewCell {
 		return label
 	}()
 	let windIcon: UIImageView = {
-		let imageView = UIImageView(image: #imageLiteral(resourceName: "Wind"))
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "Wind").withRenderingMode(.alwaysTemplate))
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		return imageView
 	}()
@@ -79,6 +75,7 @@ class TodayView: UITableViewCell {
 			self.rainLabel.text = self.getRainString(precipitation: forecast.precipitationMean)
 			self.windLabel.text = "\(forecast.windSpeed) m/s"
 			let image = IconHandler.getForecastIcon(symbol: forecast.symbol)
+			image.withRenderingMode(.alwaysTemplate)
 			self.forecastIcon.image = image
 
 		}
@@ -95,8 +92,19 @@ class TodayView: UITableViewCell {
 		return "\(precipitation) mm/h"
 	}
 	
+	private func applyTheme(){
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		backgroundColor = theme.backgroundColor
+		tempLabel.textColor = theme.textColor
+		dayLabel.textColor = theme.textColor
+		windLabel.textColor = theme.textColor
+		rainLabel.textColor = theme.textColor
+		forecastIcon.tintColor = theme.iconColor
+		rainDropp.tintColor = theme.iconColor
+		windIcon.tintColor = theme.iconColor
+	}
+	
 	func setUpViews(){
-		backgroundColor = .black
 		addSubview(tempLabel)
 		addSubview(forecastIcon)
 		addSubview(dayLabel)
@@ -139,7 +147,7 @@ class TodayView: UITableViewCell {
 		windIcon.heightAnchor.constraint(equalTo: rainDropp.heightAnchor).isActive = true
 		windIcon.widthAnchor.constraint(equalTo: rainDropp.widthAnchor).isActive = true
 		
-		
+		applyTheme()
 	}
 
 }

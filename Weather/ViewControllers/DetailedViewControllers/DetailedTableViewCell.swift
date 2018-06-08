@@ -12,7 +12,6 @@ class DetailedTableViewCell: UITableViewCell {
 
 	let dayLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .white
 		label.textAlignment = .left
 		label.font = UIFont.boldSystemFont(ofSize: 16)
 		label.adjustsFontSizeToFitWidth = true
@@ -28,7 +27,6 @@ class DetailedTableViewCell: UITableViewCell {
 	}()
 	let tempLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .white
 		label.textAlignment = .center
 		label.font = UIFont.boldSystemFont(ofSize: 18)
 		label.adjustsFontSizeToFitWidth = true
@@ -38,18 +36,19 @@ class DetailedTableViewCell: UITableViewCell {
 		return label
 	}()
 	let windIcon: UIImageView = {
-		let imageView = UIImageView(image: #imageLiteral(resourceName: "Wind"))
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "Wind").withRenderingMode(.alwaysTemplate))
+		imageView.image?.withRenderingMode(.alwaysTemplate)
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		return imageView
 	}()
 	let rainIcon: UIImageView = {
-		let imageView = UIImageView(image: #imageLiteral(resourceName: "RainDropp"))
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "RainDropp").withRenderingMode(.alwaysTemplate))
+		imageView.image?.withRenderingMode(.alwaysTemplate)
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		return imageView
 	}()
 	let windLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .white
 		label.textAlignment = .left
 		label.font = UIFont.boldSystemFont(ofSize: 12)
 		label.adjustsFontSizeToFitWidth = true
@@ -60,7 +59,6 @@ class DetailedTableViewCell: UITableViewCell {
 	}()
 	let rainLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .white
 		label.textAlignment = .left
 		label.font = UIFont.boldSystemFont(ofSize: 12)
 		label.adjustsFontSizeToFitWidth = true
@@ -75,8 +73,21 @@ class DetailedTableViewCell: UITableViewCell {
 		// Initialization code
 	}
 	
+	
+	private func applyTheme(){
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		backgroundColor = theme.backgroundColor
+		dayLabel.textColor = theme.textColor
+		rainLabel.textColor = theme.textColor
+		windLabel.textColor = theme.textColor
+		tempLabel.textColor = theme.textColor
+		rainIcon.tintColor = theme.iconColor
+		windIcon.tintColor = theme.iconColor
+		forecastIcon.tintColor = theme.iconColor
+	}
+	
 	func setUpCell(forecast: Forecast, daysInForecast: Int){
-		backgroundColor = .black
+		applyTheme()
 		let leftView: UIView = {
 			let view = UIView()
 			view.translatesAutoresizingMaskIntoConstraints = false
@@ -162,6 +173,7 @@ class DetailedTableViewCell: UITableViewCell {
 		dayLabel.text = getDetailedDayString(components: forecast.date)
 		
 		forecastIcon.image = IconHandler.getForecastIcon(symbol: forecast.symbol)
+		forecastIcon.image?.withRenderingMode(.alwaysTemplate)
 		
 		rightCenterView.addSubview(tempLabel)
 		tempLabel.centerYAnchor.constraint(equalTo: rightCenterView.centerYAnchor).isActive = true

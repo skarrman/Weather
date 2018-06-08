@@ -20,17 +20,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		GMSPlacesClient.provideAPIKey(GoogleApi.key)
 		
+		let themeHandler = ThemeHandler.getInstance()
+		
+		let theme = themeHandler.getCurrentTheme()
+		
 		// Override point for customization after application launch.
 		window = UIWindow(frame: UIScreen.main.bounds)
 
-		UIApplication.shared.statusBarStyle = .lightContent
+		UIApplication.shared.statusBarStyle = theme.statusBarStyle
 		mainViewController = MainViewController()
 		let navigationController = UINavigationController(rootViewController: mainViewController)
-		navigationController.navigationBar.barStyle = .black
+		navigationController.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController.pushViewController(mainViewController, animated: true)
 		navigationController.navigationBar.prefersLargeTitles = true
-		navigationController.navigationBar.tintColor = .white
-		navigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController.navigationBar.tintColor = theme.textColor
+		navigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
 		navigationController.navigationItem.largeTitleDisplayMode = .always
 		navigationController.navigationBar.isTranslucent = false
 

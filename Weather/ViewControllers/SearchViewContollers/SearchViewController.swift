@@ -18,9 +18,11 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 		self.title = "Sök prognos"
 		
-		self.view.backgroundColor = .black
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		self.view.backgroundColor = theme.backgroundColor
 		
 		let imageView: UIImageView = UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_non_white"))
+		imageView.image?.withRenderingMode(.alwaysTemplate)
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(imageView)
 		imageView.contentMode = .center
@@ -49,7 +51,8 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
 		
-		let image = #imageLiteral(resourceName: "LocationIcon")
+		let image = #imageLiteral(resourceName: "LocationIcon").withRenderingMode(.alwaysTemplate)
+		
 		let button: UIButton = {
 			let button = UIButton(type: .custom)
 			button.setImage(image, for: .normal)
@@ -57,6 +60,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 			button.translatesAutoresizingMaskIntoConstraints = false
 			return button
 		}()
+		button.tintColor = theme.iconColor
 		
 		button.widthAnchor.constraint(equalToConstant: 25).isActive = true
 		button.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -83,6 +87,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 			let googleClient = GMSPlacesClient.shared()
 			let filter = GMSAutocompleteFilter()
 			
+			let theme = ThemeHandler.getInstance().getCurrentTheme()
 			filter.type = GMSPlacesAutocompleteTypeFilter.city
 			filter.country = "SE"
 			googleClient.autocompleteQuery(searchController.searchBar.text!, bounds: nil, boundsMode: GMSAutocompleteBoundsMode.restrict , filter: filter , callback: { (results, error) in
@@ -98,7 +103,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 						let string = r.attributedPrimaryText.mutableCopy() as! NSMutableAttributedString
 						string.enumerateAttribute(NSAttributedStringKey(rawValue: kGMSAutocompleteMatchAttribute), in: NSMakeRange(0, string.length), options: 	NSAttributedString.EnumerationOptions(rawValue: 0), using: { (value, range, stop) in
 							let font = value == nil ? regularFont : boldFont
-							let color = value == nil ? UIColor.gray : UIColor.white
+							let color = value == nil ? theme.contrastTextColor : theme.textColor
 							string.addAttributes([NSAttributedStringKey.font : font], range: range)
 							string.addAttributes([NSAttributedStringKey.foregroundColor : color], range: range)
 						})

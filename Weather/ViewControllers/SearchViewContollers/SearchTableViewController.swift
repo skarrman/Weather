@@ -23,7 +23,7 @@ class SearchTableViewController: UITableViewController {
 		tableView.register(LocationSearchTableViewCell.self, forCellReuseIdentifier: "cell")
 		
 		
-		tableView.backgroundColor = .black
+		tableView.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
 		
 		tableView.estimatedRowHeight = 50
 		tableView.rowHeight = 50
