@@ -21,8 +21,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
 		self.view.backgroundColor = theme.backgroundColor
 		
-		let imageView: UIImageView = UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_non_white"))
-		imageView.image?.withRenderingMode(.alwaysTemplate)
+		let imageView: UIImageView = theme.backgroundColor == .black ? UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_non_white")) : UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_white"))
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(imageView)
 		imageView.contentMode = .center

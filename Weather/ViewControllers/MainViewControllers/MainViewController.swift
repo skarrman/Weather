@@ -31,7 +31,7 @@ class MainViewController: UIViewController {
 	}()
 	
 	let themebutton: UIButton = {
-		let image = #imageLiteral(resourceName: "Fog")
+		let image = #imageLiteral(resourceName: "SettingsIcon")
 		let renderedImage = image.withRenderingMode(.alwaysTemplate)
 		let button = UIButton(type: .custom)
 		button.setImage(renderedImage, for: .normal)
@@ -52,9 +52,10 @@ class MainViewController: UIViewController {
 //		self.view.addSubview(activityIndicatorView)
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
 		
 		searchButton.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
-		themebutton.addTarget(self, action: #selector(self.changeTheme), for: .touchUpInside)
+		themebutton.addTarget(self, action: #selector(self.goToSettings), for: .touchUpInside)
 		
 		searchButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
 		searchButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -74,6 +75,11 @@ class MainViewController: UIViewController {
 		applyTheme()
 	}
 	
+	@objc func goToSettings(){
+		let settingsViewController = SettingsViewController()
+		navigationController?.pushViewController(settingsViewController, animated: true)
+	}
+	
 	@objc func changeTheme(){
 		let handler = ThemeHandler.getInstance()
 		if view.backgroundColor == .black {
@@ -89,7 +95,7 @@ class MainViewController: UIViewController {
 		applyTheme()
 	}
 	
-	func applyTheme(){
+	@objc func applyTheme(){
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
 		view.backgroundColor = theme.backgroundColor
 		searchButton.tintColor = theme.iconColor

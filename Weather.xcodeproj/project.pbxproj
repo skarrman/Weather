@@ -20,6 +20,8 @@
 		7E2F08EF206FA87500BCDECF /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */; };
 		7E2F08F12072529900BCDECF /* DetailedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */; };
 		7E403F5D204FC70700329A8C /* ForecastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E403F5C204FC70700329A8C /* ForecastModel.swift */; };
+		7E4DFA6F20D4282E006888C2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4DFA6E20D4282E006888C2 /* SettingsViewController.swift */; };
+		7E4DFA7520D42AE4006888C2 /* ThemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4DFA7420D42AE4006888C2 /* ThemeTableViewController.swift */; };
 		7E6D7275205BA81700F61327 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7274205BA81700F61327 /* TodayView.swift */; };
 		7E6D7277205EF1E600F61327 /* ForecsatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7276205EF1E600F61327 /* ForecsatTableViewController.swift */; };
 		7E6D7279205EF91900F61327 /* ForecastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6D7278205EF91900F61327 /* ForecastTableViewCell.swift */; };
@@ -31,6 +33,7 @@
 		7EAD41482047DC8100DA4554 /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAD41472047DC8100DA4554 /* Forecast.swift */; };
 		7ED753E720A1BC810010D2D9 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED753E620A1BC810010D2D9 /* SearchTableViewController.swift */; };
 		7ED753E920A1BDD60010D2D9 /* PlaceSearchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED753E820A1BDD60010D2D9 /* PlaceSearchItem.swift */; };
+		7EE5E94D20E9108A00C46D00 /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE5E94C20E9108A00C46D00 /* ThemeTableViewCell.swift */; };
 		7EFDE01F2030753300486AA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFDE01E2030753300486AA7 /* AppDelegate.swift */; };
 		7EFDE0212030753300486AA7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFDE0202030753300486AA7 /* MainViewController.swift */; };
 		7EFDE0262030753300486AA7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7EFDE0252030753300486AA7 /* Assets.xcassets */; };
@@ -50,6 +53,8 @@
 		7E2F08EE206FA87500BCDECF /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
 		7E2F08F02072529900BCDECF /* DetailedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedTableViewCell.swift; sourceTree = "<group>"; };
 		7E403F5C204FC70700329A8C /* ForecastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastModel.swift; sourceTree = "<group>"; };
+		7E4DFA6E20D4282E006888C2 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		7E4DFA7420D42AE4006888C2 /* ThemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewController.swift; sourceTree = "<group>"; };
 		7E6D7274205BA81700F61327 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		7E6D7276205EF1E600F61327 /* ForecsatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecsatTableViewController.swift; sourceTree = "<group>"; };
 		7E6D7278205EF91900F61327 /* ForecastTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastTableViewCell.swift; sourceTree = "<group>"; };
@@ -61,6 +66,7 @@
 		7EAD41472047DC8100DA4554 /* Forecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		7ED753E620A1BC810010D2D9 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		7ED753E820A1BDD60010D2D9 /* PlaceSearchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSearchItem.swift; sourceTree = "<group>"; };
+		7EE5E94C20E9108A00C46D00 /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		7EFDE01B2030753300486AA7 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFDE01E2030753300486AA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7EFDE0202030753300486AA7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +99,7 @@
 		7E13DD4820C408D60095B044 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				7E4DFA7320D42ABF006888C2 /* SettingsViewControllers */,
 				7E13DD4920C408E80095B044 /* MainViewControllers */,
 				7E13DD4A20C4094F0095B044 /* DetailedViewControllers */,
 				7E13DD4B20C409A60095B044 /* SearchViewContollers */,
@@ -163,6 +170,17 @@
 				7E13DD5720C98AC80095B044 /* ThemeName.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		7E4DFA7320D42ABF006888C2 /* SettingsViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				7E4DFA6E20D4282E006888C2 /* SettingsViewController.swift */,
+				7E4DFA7420D42AE4006888C2 /* ThemeTableViewController.swift */,
+				7EE5E94C20E9108A00C46D00 /* ThemeTableViewCell.swift */,
+			);
+			name = SettingsViewControllers;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		7EFDE0122030753200486AA7 = {
@@ -347,8 +365,10 @@
 				7E6D7275205BA81700F61327 /* TodayView.swift in Sources */,
 				7E0944A2209F534F00888D00 /* GoogleApiKey.swift in Sources */,
 				7E13DD5320C579760095B044 /* Theme.swift in Sources */,
+				7EE5E94D20E9108A00C46D00 /* ThemeTableViewCell.swift in Sources */,
 				7EA83B80208A3AE90078DD5C /* LocationSearchHeader.swift in Sources */,
 				7ED753E920A1BDD60010D2D9 /* PlaceSearchItem.swift in Sources */,
+				7E4DFA7520D42AE4006888C2 /* ThemeTableViewController.swift in Sources */,
 				7E92B519207E143A00143D44 /* Location.swift in Sources */,
 				7E6D7277205EF1E600F61327 /* ForecsatTableViewController.swift in Sources */,
 				7E2F08ED206E621000BCDECF /* TableViewHeader.swift in Sources */,
@@ -361,6 +381,7 @@
 				7ED753E720A1BC810010D2D9 /* SearchTableViewController.swift in Sources */,
 				7E78BCA42056DDCA003AFE81 /* LocationServices.swift in Sources */,
 				7EFDE01F2030753300486AA7 /* AppDelegate.swift in Sources */,
+				7E4DFA6F20D4282E006888C2 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
