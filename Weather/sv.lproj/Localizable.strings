@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  Weather
+
+  Created by Simon Kärrman on 2018-07-27.
+  Copyright © 2018 Simon Kärrman. All rights reserved.
+*/
+
+"settings" = "Inställningar";
+"10_day_projection" = "10-dagarsprognos";
+"choose_theme" = "Välj tema";
+"black" = "Svart";
+"white" = "Vit";
+"today_at" = "Idag kl";
+"tomorrow" = "Imorgon";
+"today" = "Idag";
+"search_projection" = "Sök prognos";
+"search_location" = "Sök plats";
+"search" = "Sökning";
+"latest_search" = "Senast sökta";
+"no_hits" = "Sökningen gav inga resultat";
+

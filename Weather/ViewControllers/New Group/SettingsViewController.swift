@@ -19,7 +19,7 @@ class SettingsViewController: UIViewController {
 	let themeListLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .left
-		label.text = "Välj tema"
+		label.text = NSLocalizedString("choose_theme", comment: "")
 		label.font = UIFont.systemFont(ofSize: 18)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
@@ -31,7 +31,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		self.title = "Inställningar"
+		self.title = NSLocalizedString("settings", comment: "")
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
 		
@@ -44,15 +44,21 @@ class SettingsViewController: UIViewController {
 		themeTable.didMove(toParentViewController: self)
 		let tableView = themeTable.tableView!
 		self.view.addSubview(tableView)
-		tableView.topAnchor.constraint(equalTo: themeListLabel.bottomAnchor, constant: 5).isActive = true
+		tableView.topAnchor.constraint(equalTo: themeListLabel.bottomAnchor, constant: 0).isActive = true
 		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
 		tableView.heightAnchor.constraint(equalToConstant: tableView.rowHeight * 2 + tableView.sectionHeaderHeight).isActive = true
 		//tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 		tableView.sizeToFit()
         // Do any additional setup after loading the view.
+
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.done))
 		applyTheme()
     }
+	
+	@objc func done(){
+		self.dismiss(animated: true, completion: nil)
+	}
 	
 	@objc private func applyTheme(){
 		let theme = ThemeHandler.getInstance().getCurrentTheme()

@@ -85,7 +85,7 @@ class TodayView: UITableViewCell {
 		
 		dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
 		let time = components.hour!
-		return "I dag kl \(time)"
+		return "\(NSLocalizedString("today_at", comment: "")) \(time)"
 	}
 	
 	func getRainString(precipitation: Double) -> String {

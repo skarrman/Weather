@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  Weather
+
+  Created by Simon Kärrman on 2018-07-27.
+  Copyright © 2018 Simon Kärrman. All rights reserved.
+*/
+
+"settings" = "Settings";
+"10_day_projection" = "10 day forecast";
+"choose_theme" = "Choose Theme";
+"black" = "Black";
+"white" = "White";
+"today_at" = "Today at";
+"tomorrow" = "Tomorrow";
+"today" = "Today";
+"search_projection" = "Search forecast";
+"search_location" = "Search Location";
+"search" = "Search";
+"latest_search" = "Latest Search";
+"no_hits" = "No results";
+
+
+

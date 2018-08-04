@@ -9,7 +9,7 @@
 import UIKit
 
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UIPopoverPresentationControllerDelegate {
 
 	
 	var forecastModel: ForecastModel!
@@ -30,7 +30,7 @@ class MainViewController: UIViewController {
 		return button
 	}()
 	
-	let themebutton: UIButton = {
+	let themeButton: UIButton = {
 		let image = #imageLiteral(resourceName: "SettingsIcon")
 		let renderedImage = image.withRenderingMode(.alwaysTemplate)
 		let button = UIButton(type: .custom)
@@ -38,6 +38,16 @@ class MainViewController: UIViewController {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}()
+	
+	let locationButton: UIButton = {
+		let image = #imageLiteral(resourceName: "LocationIcon")
+		let renderedImage = image.withRenderingMode(.alwaysTemplate)
+		let button = UIButton(type: .custom)
+		button.setImage(renderedImage, for: .normal)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		return button
+	}()
+	
 
 //	let searchResultController: LocationSearchResultController = LocationSearchResultController()
 	var currentLocation: Location!
@@ -55,18 +65,17 @@ class MainViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
 		
 		searchButton.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
-		themebutton.addTarget(self, action: #selector(self.goToSettings), for: .touchUpInside)
-		
-		searchButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-		searchButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-		
-		themebutton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-		themebutton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
-		navigationItem.leftBarButtonItem = UIBarButtonItem(customView: themebutton)
+		themeButton.addTarget(self, action: #selector(self.goToSettings), for: .touchUpInside)
+		locationButton.addTarget(self, action: #selector(self.updateWithCurrentLocation), for: .touchUpInside)
 		
 		
+		let search = UIBarButtonItem(customView: searchButton)
+		let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: self, action: nil)
+		space.width = 25
+		let location = UIBarButtonItem(customView: locationButton)
+		navigationItem.rightBarButtonItems = [search, space, location]
+		navigationItem.leftBarButtonItem = UIBarButtonItem(customView: themeButton)
+
 		
 		self.title = ""
 		//Init UI elements
@@ -77,7 +86,22 @@ class MainViewController: UIViewController {
 	
 	@objc func goToSettings(){
 		let settingsViewController = SettingsViewController()
-		navigationController?.pushViewController(settingsViewController, animated: true)
+		let nav = UINavigationController(rootViewController: settingsViewController)
+		nav.modalPresentationStyle = .popover
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		nav.navigationBar.barStyle = theme.navigationBarStyle
+		nav.navigationBar.tintColor = theme.textColor
+		nav.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		
+		let popOver = nav.popoverPresentationController
+		popOver?.delegate = self
+		popOver?.barButtonItem = navigationItem.leftBarButtonItem
+//		popOver?.barButtonItem = UIBarButtonItem.
+		self.present(nav, animated: true, completion: nil)
+	}
+	
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .popover
 	}
 	
 	@objc func changeTheme(){
@@ -97,15 +121,29 @@ class MainViewController: UIViewController {
 	
 	@objc func applyTheme(){
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		UIApplication.shared.statusBarStyle = theme.statusBarStyle
+		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
+		navigationController?.navigationBar.tintColor = theme.textColor
+		navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
 		view.backgroundColor = theme.backgroundColor
 		searchButton.tintColor = theme.iconColor
-		themebutton.tintColor = theme.iconColor
+		themeButton.tintColor = theme.iconColor
 		forecastTableView.applyTheme()
 	}
 	
-	func startUpdatingForecast(){
+	@objc func startUpdatingForecast(){
 		//updated = false
+		forecastTableView.startRefreshing()
 		locationServices.determineMyLocation()
+	}
+	
+	@objc func updateWithCurrentLocation(){
+		forecastTableView.startRefreshing()
+		if locationServices.isPermissionDetermined(){
+			locationServices.determineMyLocation()
+		} else {
+			locationServices.makeRequest()
+		}
 	}
 
 	
@@ -117,8 +155,10 @@ class MainViewController: UIViewController {
 	}
 	
 	func refreshForecast(){
-		forecastTableView.startRefreshing()
+	
+		
 		if currentLocation != nil {
+			forecastTableView.startRefreshing()
 			forecastModel.updateForecast(location: currentLocation)
 		}else{
 			startUpdatingForecast()

@@ -19,21 +19,28 @@ class ForecsatTableViewController: UITableViewController {
 			return view
 		}()
 	
+	var loadingView: UIView = {
+		let loadingView = UIView()
+		loadingView.translatesAutoresizingMaskIntoConstraints = false
+		loadingView.backgroundColor = .gray
+		loadingView.backgroundColor?.withAlphaComponent(0.5)
+		loadingView.clipsToBounds = true
+		loadingView.layer.cornerRadius = 10
+		return loadingView
+	}()
+	
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: "cellId")
-		tableView.rowHeight = 70
+
 		tableView.sectionHeaderHeight = 0
+		tableView.rowHeight = 70
 		
 		tableView.estimatedRowHeight = 70
 		tableView.estimatedSectionHeaderHeight = 0
-		
-		tableView.addSubview(activityIndicatorView)
-		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
 		
 
         // Uncomment the following line to preserve selection between presentations
@@ -49,9 +56,42 @@ class ForecsatTableViewController: UITableViewController {
 	}
 	
 	func startRefreshing() {
+		view.addSubview(loadingView)
+		loadingView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+		loadingView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+		loadingView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+		loadingView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+		
+		tableView.addSubview(activityIndicatorView)
+		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+		
 		tableView.separatorStyle = .none
 		activityIndicatorView.startAnimating()
 		
+//		var container: UIView = UIView()
+//		container.frame = uiView.frame
+//		container.center = uiView.center
+//		container.backgroundColor = UIColorFromHex(0xffffff, alpha: 0.3)
+//
+//		var loadingView: UIView = UIView()
+//		loadingView.frame = CGRectMake(0, 0, 80, 80)
+//		loadingView.center = uiView.center
+//		loadingView.backgroundColor = UIColorFromHex(0x444444, alpha: 0.7)
+//		loadingView.clipsToBounds = true
+//		loadingView.layer.cornerRadius = 10
+//
+//		var actInd: UIActivityIndicatorView = UIActivityIndicatorView()
+//		actInd.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+//		actInd.activityIndicatorViewStyle =
+//			UIActivityIndicatorViewStyle.WhiteLarge
+//		actInd.center = CGPointMake(loadingView.frame.size.width / 2,
+//									loadingView.frame.size.height / 2);
+//		loadingView.addSubview(actInd)
+//		container.addSubview(loadingView)
+//		uiView.addSubview(container)
+//		actInd.startAnimating()
+
 	}
 	
 	
@@ -75,8 +115,11 @@ class ForecsatTableViewController: UITableViewController {
 		
 		DispatchQueue.main.async {
 			self.activityIndicatorView.stopAnimating()
+			self.loadingView.removeFromSuperview()
+			self.activityIndicatorView.removeFromSuperview()
 			self.tableView.separatorStyle = .singleLine
 			self.tableView.reloadData()
+			self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
 		}
 		
 	}

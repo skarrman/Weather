@@ -32,7 +32,7 @@ class DetailedViewController: UIViewController {
 		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
 		
-		navigationItem.title = "10-dagarsprognos"
+		navigationItem.title = NSLocalizedString("10_day_projection", comment: "")
 
         // Do any additional setup after loading the view.
     }

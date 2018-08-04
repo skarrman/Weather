@@ -22,12 +22,24 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 		
 		locationManager.delegate = self
 		locationManager.desiredAccuracy = kCLLocationAccuracyBest
-		locationManager.requestWhenInUseAuthorization()
+		//locationManager.requestWhenInUseAuthorization()
 		
 	}
 	
+	func makeRequest() {
+		locationManager.requestWhenInUseAuthorization()
+	}
+	
 	func determineMyLocation(){
-		if CLLocationManager.locationServicesEnabled() {
+		if isPermissionDetermined() && CLLocationManager.locationServicesEnabled(){
+			locationManager.startUpdatingLocation()
+		}else {
+			reverseGeocode(userLocation: CLLocation(latitude: 59.331495, longitude: 18.056975))
+		}
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+		if status == .authorizedWhenInUse {
 			locationManager.startUpdatingLocation()
 		}
 	}
@@ -42,9 +54,30 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 		}
 		manager.stopUpdatingLocation()
 		
-		let reverseGeocoder = CLGeocoder()
+		
+		reverseGeocode(userLocation: userLocation)
+		
+//		let geocoder = CLGeocoder()
+//
+//		geocoder.geocodeAddressString("Göteborg") { (placemarks, error) in
+//
+//			if error == nil {
+//				for location in placemarks!{
+//					print("City: ", location.locality ?? "No city")
+//					print("Coordinates: ", location.location?.coordinate ?? "No coordinates")
+//				}
+//			}
+//			return
+//		}
+//
+//		print("user latitude = \(userLocation.coordinate.latitude)")
+//		print("user longitude = \(userLocation.coordinate.longitude)")
 		
 
+	}
+	
+	private func reverseGeocode(userLocation: CLLocation){
+		let reverseGeocoder = CLGeocoder()
 		reverseGeocoder.reverseGeocodeLocation(userLocation ){ (placemarks, error) in
 			if error == nil {
 				let firstLocation = placemarks?[0]
@@ -59,24 +92,10 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 				print("An error occurred during geocoding.")
 			}
 		}
-		
-		let geocoder = CLGeocoder()
-
-		geocoder.geocodeAddressString("Göteborg") { (placemarks, error) in
-			
-			if error == nil {
-				for location in placemarks!{
-					print("City: ", location.locality ?? "No city")
-					print("Coordinates: ", location.location?.coordinate ?? "No coordinates")
-				}
-			}
-			return
-		}
-		
-		print("user latitude = \(userLocation.coordinate.latitude)")
-		print("user longitude = \(userLocation.coordinate.longitude)")
-		
-
+	}
+	
+	func isPermissionDetermined() -> Bool {
+		return CLLocationManager.authorizationStatus() != .notDetermined
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

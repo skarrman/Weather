@@ -13,7 +13,7 @@ class ForecastTableViewCell: UITableViewCell {
 	let dayLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .left
-		label.font = UIFont.boldSystemFont(ofSize: 16)
+		label.font = UIFont.boldSystemFont(ofSize: 14)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
 		label.numberOfLines = 0
@@ -78,6 +78,8 @@ class ForecastTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	
+	
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -111,18 +113,22 @@ class ForecastTableViewCell: UITableViewCell {
 		leftView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
 		leftView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		leftView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		leftView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.25).isActive = true
+		leftView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.26).isActive = true
 		leftView.addSubview(dayLabel)
+//		leftView.backgroundColor = .orange
 		dayLabel.leftAnchor.constraint(equalTo: leftView.leftAnchor, constant: 20).isActive = true
 		dayLabel.centerYAnchor.constraint(equalTo: leftView.centerYAnchor).isActive = true
-		dayLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor).isActive = true
+		dayLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor, constant: -20).isActive = true
 		dayLabel.heightAnchor.constraint(equalTo: leftView.heightAnchor, multiplier: 0.8).isActive = true
+//		dayLabel.backgroundColor = .green
 		
 		addSubview(leftCenterView)
 		leftCenterView.leftAnchor.constraint(equalTo: leftView.rightAnchor).isActive = true
 		leftCenterView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		leftCenterView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		leftCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.25).isActive = true
+		leftCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.19).isActive = true
+//		leftCenterView.backgroundColor = .red
+
 		
 		leftCenterView.addSubview(forecastIcon)
 		forecastIcon.centerXAnchor.constraint(equalTo: leftCenterView.centerXAnchor).isActive = true
@@ -134,13 +140,16 @@ class ForecastTableViewCell: UITableViewCell {
 		rightCenterView.leftAnchor.constraint(equalTo: leftCenterView.rightAnchor).isActive = true
 		rightCenterView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		rightCenterView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		rightCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2).isActive = true
-	
+		rightCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.19).isActive = true
+//		rightCenterView.backgroundColor = .green
+		
+		
 		addSubview(rightView)
 		rightView.leftAnchor.constraint(equalTo: rightCenterView.rightAnchor).isActive = true
 		rightView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		rightView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		rightView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+		rightView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+//		rightView.backgroundColor = .gray
 		
 		rightView.addSubview(windIcon)
 		windIcon.leftAnchor.constraint(equalTo: rightView.leftAnchor).isActive = true
@@ -200,6 +209,7 @@ class ForecastTableViewCell: UITableViewCell {
 		windLabel.text = "\(getMeanWind(forecasts: forecast)) m/s"
 		let rainParameters = getTotalPrecipitation(forecsts: forecast)
 		rainLabel.text = "\(rainParameters.0) \(rainParameters.1)"
+		self.accessoryType = .disclosureIndicator
 	}
 	
 	private func applyTheme(){
@@ -264,10 +274,10 @@ class ForecastTableViewCell: UITableViewCell {
 		let today = (Calendar.current).component(.day, from: Date(timeIntervalSinceNow: 0))
 		let day = components.day!
 		if day == today{
-			return "Idag kl \(components.hour!):"
+			return "\(NSLocalizedString("today_at", comment: "")) \(components.hour!):"
 		}
 		else if day == today + 1 {
-			return "Imorgon:"
+			return "\(NSLocalizedString("tomorrow", comment: "")):"
 		}
 			dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
 		

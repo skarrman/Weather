@@ -13,69 +13,47 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 	
 	let searchTableView: SearchTableViewController = SearchTableViewController()
 	var locationServices: LocationServices!
+	var latestSearchConstraint: NSLayoutConstraint!
+	var searchConstraint: NSLayoutConstraint!
 	
     override func viewDidLoad() {
 		
-		self.title = "Sök prognos"
+		self.title = NSLocalizedString("search_projection", comment: "")
 		
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
 		self.view.backgroundColor = theme.backgroundColor
 		
-		let imageView: UIImageView = theme.backgroundColor == .black ? UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_non_white")) : UIImageView(image: #imageLiteral(resourceName: "powered_by_google_on_white"))
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-		view.addSubview(imageView)
-		imageView.contentMode = .center
-		
-		imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
-		imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-		imageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.04).isActive = true
-		imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+//		
 		searchTableView.didMove(toParentViewController: self)
 		addChildViewController(searchTableView)
+		self.searchTableView.tableView.isScrollEnabled = false
 		let searchView = searchTableView.view!
 		searchView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(searchView)
 		searchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
 		searchView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
 		searchView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-		searchView.bottomAnchor.constraint(equalTo: imageView.topAnchor, constant: -10).isActive = true
+		latestSearchConstraint = searchView.heightAnchor.constraint(equalToConstant: searchTableView.tableView.rowHeight * 5 + searchTableView.tableView.sectionHeaderHeight)
+		
+		latestSearchConstraint.isActive = true
+		
+		searchConstraint = searchView.heightAnchor.constraint(equalToConstant: searchTableView.tableView.rowHeight * 6 + searchTableView.tableView.sectionHeaderHeight)
 		
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
-		searchController.searchBar.placeholder = "Sök plats"
+		searchController.searchBar.placeholder = NSLocalizedString("search_location", comment: "")
 		navigationItem.searchController = searchController
 		searchController.searchBar.keyboardAppearance = .dark
 		
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
 		
-		let image = #imageLiteral(resourceName: "LocationIcon").withRenderingMode(.alwaysTemplate)
-		
-		let button: UIButton = {
-			let button = UIButton(type: .custom)
-			button.setImage(image, for: .normal)
-			button.addTarget(self, action: #selector(self.userLocation), for: .touchUpInside)
-			button.translatesAutoresizingMaskIntoConstraints = false
-			return button
-		}()
-		button.tintColor = theme.iconColor
-		
-		button.widthAnchor.constraint(equalToConstant: 25).isActive = true
-		button.heightAnchor.constraint(equalToConstant: 25).isActive = true
-		
-		navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-		
 		
 		
 		
 	}
 	
-	@objc func userLocation(){
-		locationServices.determineMyLocation()
-		self.navigationController?.popViewController(animated: true)
-	}
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -83,6 +61,10 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 	
 	func updateSearchResults(for searchController: UISearchController) {
 		if searchController.searchBar.text!.count > 0 {
+			searchTableView.inSearch(value: true)
+			latestSearchConstraint.isActive = false
+			searchConstraint.isActive = true
+			
 			let googleClient = GMSPlacesClient.shared()
 			let filter = GMSAutocompleteFilter()
 			
@@ -109,12 +91,18 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 				
 						places.append(PlaceSearchItem(string: string, placeID: placeID))
 					}
+					
 					self.searchTableView.searchedPlaces = places
+					print("Count", places.count)
 					self.searchTableView.tableView.reloadData()
+					
 				}
 				
 			})
 		}else {
+			self.searchTableView.inSearch(value: false)
+			searchConstraint.isActive = false
+			latestSearchConstraint.isActive = true
 			self.searchTableView.searchedPlaces.removeAll()
 			self.searchTableView.tableView.reloadData()
 		}

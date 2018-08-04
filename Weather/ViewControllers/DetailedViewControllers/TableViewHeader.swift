@@ -27,10 +27,10 @@ class TableViewHeader: UIView{
 		let day = components.day!
 		var dayString: String!
 		if day == today{
-			dayString = "Idag"
+			dayString = NSLocalizedString("today", comment: "")
 		}
 		else if day == today + 1 {
-			dayString = "Imorgon"
+			dayString = NSLocalizedString("tomorrow", comment: "")
 		}else{
 			dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
 		

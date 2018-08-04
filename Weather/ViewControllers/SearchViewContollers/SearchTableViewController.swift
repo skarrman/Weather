@@ -15,12 +15,16 @@ class SearchTableViewController: UITableViewController {
 	var forecastModel: ForecastModel!
 	var savedLocations = [Location]()
 	var searchedPlaces = [PlaceSearchItem]()
+	var googleCell: GoogleTableViewCell!
+	var inSearch: Bool!
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		tableView.register(LocationSearchTableViewCell.self, forCellReuseIdentifier: "cell")
+		tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: "cell")
+		
+		inSearch = false
 		
 		
 		tableView.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
@@ -29,6 +33,9 @@ class SearchTableViewController: UITableViewController {
 		tableView.rowHeight = 50
 		tableView.estimatedSectionHeaderHeight = 30
 		tableView.sectionHeaderHeight = 30
+		
+		googleCell = GoogleTableViewCell()
+		googleCell.setUp()
 		
 		guard let saved = loadLocations() else {
 			print("No locations saved")
@@ -54,33 +61,53 @@ class SearchTableViewController: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
-		if searchedPlaces.count > 0 {
-			return searchedPlaces.count
+		if  inSearch {
+			return 6
 		}else {
 			return savedLocations.count
 		}
 	}
 	
+	func inSearch(value: Bool){
+		inSearch = value
+	}
+	
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let header = LocationSearchHeader()
 		header.setUpViews()
-		if searchedPlaces.count > 0 {
-			header.label.text = "Sökning"
+		if inSearch {
+			header.label.text = NSLocalizedString("search", comment: "")
 		}else {
-			header.label.text = "Senast sökta"
+			header.label.text = NSLocalizedString("latest_search", comment: "")
 		}
 		return header
 	}
 	
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LocationSearchTableViewCell
+		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SearchTableViewCell
 		
 		// Configure the cell...
-		
-		if searchedPlaces.count > 0 {
-			cell.cityLabel.attributedText = searchedPlaces[indexPath.row].string
-		}else {
+		cell.cityLabel.textColor = ThemeHandler.getInstance().getCurrentTheme().textColor
+		if inSearch {
+			if searchedPlaces.count > 0 {
+				if indexPath.row < searchedPlaces.count {
+					cell.cityLabel.attributedText = searchedPlaces[indexPath.row].string
+				}
+			} else {
+			if indexPath.row == 0 {
+				cell.cityLabel.textColor = ThemeHandler.getInstance().getCurrentTheme().contrastTextColor
+					cell.cityLabel.text = NSLocalizedString("no_hits", comment: "")
+				}else {
+					cell.cityLabel.text = ""
+				}
+			}
+			
+		if indexPath.row == 5 {
+			return googleCell
+		}
+			
+		}else{
 			cell.cityLabel.text = savedLocations[indexPath.row].name
 		}
 		return cell

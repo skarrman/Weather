@@ -53,10 +53,13 @@ class ThemeTableViewController: UITableViewController {
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let feedBackGenerator = UIImpactFeedbackGenerator()
 		if(indexPath.row == 0 && view.backgroundColor != .black){
 			changeTheme(to: .black)
+			feedBackGenerator.impactOccurred()
 		}else if(indexPath.row == 1 && view.backgroundColor != .white){
 			changeTheme(to: .white)
+			feedBackGenerator.impactOccurred()
 		}
 		tableView.deselectRow(at: indexPath, animated: true)
 		NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "ThemeChanged")))
@@ -86,14 +89,14 @@ class ThemeTableViewController: UITableViewController {
 			}else{
 				cell.setCheckIcon(visible: false)
 			}
-			cell.nameLabel.text = "Svart"
+			cell.nameLabel.text = NSLocalizedString("black", comment: "")
 		}else{
 			if(view.backgroundColor == .white){
 				cell.setCheckIcon(visible: true)
 			}else{
 				cell.setCheckIcon(visible: false)
 			}
-			cell.nameLabel.text = "Vit"
+			cell.nameLabel.text = NSLocalizedString("white", comment: "")
 		}
 		
 
