@@ -70,6 +70,7 @@ class SearchTableViewController: UITableViewController {
 	
 	func inSearch(value: Bool){
 		inSearch = value
+		tableView.reloadData()
 	}
 	
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

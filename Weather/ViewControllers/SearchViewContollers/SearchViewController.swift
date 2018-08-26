@@ -12,7 +12,6 @@ import GooglePlaces
 class SearchViewController: UIViewController, UISearchResultsUpdating {
 	
 	let searchTableView: SearchTableViewController = SearchTableViewController()
-	var locationServices: LocationServices!
 	var latestSearchConstraint: NSLayoutConstraint!
 	var searchConstraint: NSLayoutConstraint!
 	

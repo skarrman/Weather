@@ -236,8 +236,8 @@ class ForecastTableViewCell: UITableViewCell {
 	}
 	
 	private func getTemps(forecasts: [Forecast]) -> (Double, Double) {
-		var lowest = forecasts.first!.temp
-		var highest = forecasts.first!.temp
+		var lowest = Double.infinity
+		var highest = -Double.infinity
 		
 		for f in forecasts {
 			if f.temp < lowest {

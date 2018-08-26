@@ -11,9 +11,20 @@ import UIKit
 
 class MainViewController: UIViewController, UIPopoverPresentationControllerDelegate {
 
-	
+	//MARK: Model members
 	var forecastModel: ForecastModel!
 	var locationServices: LocationServices!
+	var currentLocation: Location!
+	
+	//MARK: View controllers
+	let searchViewController: SearchViewController = SearchViewController()
+	
+	//MARK: UI members
+	let loadingView: LoadingView = {
+		let view = LoadingView()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		return view
+	}()
 	
 	var forecastTableView: ForecsatTableViewController = {
 		let tableViewController = ForecsatTableViewController()
@@ -48,10 +59,6 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		return button
 	}()
 	
-
-//	let searchResultController: LocationSearchResultController = LocationSearchResultController()
-	var currentLocation: Location!
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -81,6 +88,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		//Init UI elements
 //		initActivityIndicator()
 		initTableView()
+	
 		applyTheme()
 	}
 	
@@ -131,14 +139,33 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		forecastTableView.applyTheme()
 	}
 	
+	private func startRefreshing(){
+		DispatchQueue.main.async {
+			self.view.addSubview(self.loadingView)
+			self.loadingView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+			self.loadingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+			self.loadingView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+			self.loadingView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+			self.loadingView.startRefreshing()
+		}
+	}
+	
+	private func  stopRefreshing(){
+		loadingView.stopRefreshing()
+		DispatchQueue.main.async {
+			self.loadingView.removeFromSuperview()
+		}
+		
+	}
+	
 	@objc func startUpdatingForecast(){
 		//updated = false
-		forecastTableView.startRefreshing()
+		startRefreshing()
 		locationServices.determineMyLocation()
 	}
 	
 	@objc func updateWithCurrentLocation(){
-		forecastTableView.startRefreshing()
+		startRefreshing()
 		if locationServices.isPermissionDetermined(){
 			locationServices.determineMyLocation()
 		} else {
@@ -149,16 +176,14 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 	
 	@objc private func goToPlacesSearch(){
 		let placesSearchViewController = SearchViewController()
-		placesSearchViewController.locationServices = locationServices
 		placesSearchViewController.searchTableView.forecastModel = forecastModel
 		navigationController?.pushViewController(placesSearchViewController, animated: true)
 	}
 	
 	func refreshForecast(){
-	
 		
 		if currentLocation != nil {
-			forecastTableView.startRefreshing()
+			startRefreshing()
 			forecastModel.updateForecast(location: currentLocation)
 		}else{
 			startUpdatingForecast()
@@ -169,7 +194,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 	@objc func forecastUpdated(){
 		let forecasts = forecastModel.getForecasts()
 		currentLocation = forecastModel.getLocation()
-		
+		stopRefreshing()
 		forecastTableView.updateWithForecast(forecasts: forecasts)
 		DispatchQueue.main.async {
 			self.title = self.currentLocation.name
@@ -191,6 +216,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
 		tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+	
 	}
 	
 

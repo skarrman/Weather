@@ -10,26 +10,10 @@ import UIKit
 
 class ForecsatTableViewController: UITableViewController {
 	
+	//MARK: Properties
 	var forecasts: [[Forecast]] = [[Forecast]]()
 	
-		var activityIndicatorView: UIActivityIndicatorView = {
-			let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-			view.translatesAutoresizingMaskIntoConstraints = false
-			view.hidesWhenStopped = true
-			return view
-		}()
-	
-	var loadingView: UIView = {
-		let loadingView = UIView()
-		loadingView.translatesAutoresizingMaskIntoConstraints = false
-		loadingView.backgroundColor = .gray
-		loadingView.backgroundColor?.withAlphaComponent(0.5)
-		loadingView.clipsToBounds = true
-		loadingView.layer.cornerRadius = 10
-		return loadingView
-	}()
-	
-
+	let detailedViewController: DetailedViewController = DetailedViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,44 +39,6 @@ class ForecsatTableViewController: UITableViewController {
 		self.tableView.reloadData()
 	}
 	
-	func startRefreshing() {
-		view.addSubview(loadingView)
-		loadingView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-		loadingView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-		loadingView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-		loadingView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-		
-		tableView.addSubview(activityIndicatorView)
-		activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-		activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-		
-		tableView.separatorStyle = .none
-		activityIndicatorView.startAnimating()
-		
-//		var container: UIView = UIView()
-//		container.frame = uiView.frame
-//		container.center = uiView.center
-//		container.backgroundColor = UIColorFromHex(0xffffff, alpha: 0.3)
-//
-//		var loadingView: UIView = UIView()
-//		loadingView.frame = CGRectMake(0, 0, 80, 80)
-//		loadingView.center = uiView.center
-//		loadingView.backgroundColor = UIColorFromHex(0x444444, alpha: 0.7)
-//		loadingView.clipsToBounds = true
-//		loadingView.layer.cornerRadius = 10
-//
-//		var actInd: UIActivityIndicatorView = UIActivityIndicatorView()
-//		actInd.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
-//		actInd.activityIndicatorViewStyle =
-//			UIActivityIndicatorViewStyle.WhiteLarge
-//		actInd.center = CGPointMake(loadingView.frame.size.width / 2,
-//									loadingView.frame.size.height / 2);
-//		loadingView.addSubview(actInd)
-//		container.addSubview(loadingView)
-//		uiView.addSubview(container)
-//		actInd.startAnimating()
-
-	}
 	
 	
 	func updateWithForecast(forecasts: [Forecast]) {
@@ -114,10 +60,7 @@ class ForecsatTableViewController: UITableViewController {
 		}
 		
 		DispatchQueue.main.async {
-			self.activityIndicatorView.stopAnimating()
-			self.loadingView.removeFromSuperview()
-			self.activityIndicatorView.removeFromSuperview()
-			self.tableView.separatorStyle = .singleLine
+			self.detailedViewController.detailedTableViewController.updateWith(forecasts: self.forecasts)
 			self.tableView.reloadData()
 			self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
 		}
@@ -177,14 +120,13 @@ class ForecsatTableViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let destination = DetailedViewController()
 		var index = 0
 		if indexPath.row > ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count - 1) {
 			index = indexPath.row - ((forecasts.first!.count > 6) ? 4 : forecasts.first!.count - 1)
 			print(forecasts[index].first!.date.day!)
 		}
-		destination.detailedTableViewController.updateWith(forecasts: forecasts, dayToScrollTo: forecasts[index].first!.date.day!)
-		navigationController?.pushViewController(destination, animated: true)
+		detailedViewController.detailedTableViewController.scrollTo(day: forecasts[index].first!.date.day!)
+		navigationController?.pushViewController(detailedViewController, animated: true)
 	}
 	
     /*

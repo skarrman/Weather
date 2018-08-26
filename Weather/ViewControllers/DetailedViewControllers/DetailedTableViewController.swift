@@ -33,14 +33,9 @@ class DetailedTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 	
-	func updateWith(forecasts: [[Forecast]], dayToScrollTo: Int){
+	func updateWith(forecasts: [[Forecast]]){
 		self.forecasts = forecasts
-		
-		tableView.beginUpdates()
-		tableView.reloadData()
-		tableView.endUpdates()
-		
-		scrollTo(day: dayToScrollTo)
+		self.tableView.reloadData()
 	}
 	
 	func scrollTo(day: Int){
