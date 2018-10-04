@@ -37,6 +37,7 @@ class ForecsatTableViewController: UITableViewController {
 	func applyTheme(){
 		self.view.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
 		self.tableView.reloadData()
+		self.detailedViewController.applyTheme()
 	}
 	
 	

@@ -9,6 +9,10 @@
 import UIKit
 
 class ThemeTableViewController: UITableViewController {
+	
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return ThemeHandler.getInstance().getCurrentTheme().statusBarStyle
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -71,11 +75,11 @@ class ThemeTableViewController: UITableViewController {
 		handler.changeTheme(to: to)
 		
 		let theme = handler.getCurrentTheme()
-		UIApplication.shared.statusBarStyle = theme.statusBarStyle
 		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController?.navigationBar.tintColor = theme.textColor
-		navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		applyTheme()
+		setNeedsStatusBarAppearanceUpdate()
 	}
 	
 	

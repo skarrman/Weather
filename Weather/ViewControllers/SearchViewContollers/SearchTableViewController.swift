@@ -149,7 +149,7 @@ class SearchTableViewController: UITableViewController {
 					let location = Location(name: place!.name, longitude: place!.coordinate.longitude, latitude: place!.coordinate.latitude)
 					self.addToSaved(location: location)
 					self.saveLocations()
-					self.forecastModel.updateForecast(location: location)
+					//self.forecastModel.updateForecast(location: location)
 					self.navigationController?.popViewController(animated: true)
 				}
 			}
@@ -162,7 +162,7 @@ class SearchTableViewController: UITableViewController {
 				addToSaved(location: location)
 				saveLocations()
 			}
-			forecastModel.updateForecast(location: location)
+			//forecastModel.updateForecast(location: location)
 			navigationController?.popViewController(animated: true)
 		}
 	}

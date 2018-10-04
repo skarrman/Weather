@@ -21,7 +21,7 @@ class DetailedViewController: UIViewController {
 	
 	
 		navigationItem.largeTitleDisplayMode = .always
-		view.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
+		
 		
 		
 		
@@ -34,8 +34,14 @@ class DetailedViewController: UIViewController {
 		
 		navigationItem.title = NSLocalizedString("10_day_projection", comment: "")
 
+		applyTheme()
         // Do any additional setup after loading the view.
     }
+	
+	func applyTheme(){
+		view.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
+		detailedTableViewController.tableView.reloadData()
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -2,17 +2,19 @@
 //  ForecastModel.swift
 //  Weather
 //
-//  Created by Simon Kärrman on 2018-03-07.
+//  Created by Simon Kärrman on 2018-09-11.
 //  Copyright © 2018 Simon Kärrman. All rights reserved.
 //
 
 import Foundation
+import RxSwift
 
-class ForecastModel {
+public class ForecastModel {
 	
-	private var forecasts: [Forecast]!
+	private var forecasts: [Forecast] = [Forecast]()
 	private var location: Location!
 	private var referenceTime: Date?
+	private let disposeBag = DisposeBag()
 	
 	func getForecasts() -> [Forecast]{
 		return forecasts
@@ -22,51 +24,32 @@ class ForecastModel {
 		return location
 	}
 	
-	func updateForecast(location: Location){
-		let decimals = 1000000.0
-		let long = (location.longitude * decimals).rounded() / decimals
-		let lat = (location.latitude * decimals).rounded() / decimals
+	func getForecast(for location: Location) -> Single<[Forecast]>{
+		return Single<[Forecast]>.create { single in
 		
-		
-//		if !isTimeForNewForecast() && !userHasMoved(distance: distance) {
-//			return
-//		}
-		self.location = location
-		
-		//Ryd test url
-		//let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/12.5033/lat/57.8579/data.json"
-		
-		let urlString = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/\(long)/lat/\(lat)/data.json"
-		guard let url = URL(string: urlString) else { return }
-		
-		URLSession.shared.dataTask(with: url) { (data, response, error) in
-			guard let data = data else { return }
+			self.location = location
 			
-			//Check for error and response
+			let apiClient = APIClient()
+	
+			apiClient.send(apiRequest: ForecastRequest(location: location))
+				.subscribeOn(CurrentThreadScheduler.instance)
+				.subscribe(
+					onSuccess: { forecastsJson in
+						self.forecasts = self.decodeForecasts(forecasts: forecastsJson)
+						single(.success(self.forecasts))
+					},
+					onError: { error in
+						single(.error(error))
+					}
+				)
+				.disposed(by: self.disposeBag)
 			
-//			print(error ?? "No error provided")
-//			print(response ?? "No response provided")
-			
-			guard let httpResponse = response as! HTTPURLResponse? else{print("Not a HTTP");return}
-			print("StatusCode:",httpResponse.statusCode)
-			
-			if httpResponse.statusCode != 200 {
-				NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "BadRequest")))
-				return
-			}
-			do{
-				let forecast = try JSONDecoder().decode(Forecasts.self, from: data)
-				self.decodeForecasts(forecasts: forecast)
-				
-				//print(self.forecasts!.first ?? "No forecast")
-				
-			}  catch let jsonErr {
-				print("Error serilizing json", jsonErr)
-			}
-		}.resume()
+			return Disposables.create{}
+		}
+		
 	}
 	
-	func decodeForecasts(forecasts: Forecasts){
+	func decodeForecasts(forecasts: Forecasts) -> [Forecast] {
 		//let order = ["msl", "t", "vis", "wd", "ws", "r", "tstm", "tcc_mean", "lcc_mean", "mcc_mean", "hcc_mean", "gust", "pmin", "pmax", "spp", "pcat", "pmean", "pmedian", "Wsymb2"]
 		let dateFormatter = ISO8601DateFormatter()
 		referenceTime = dateFormatter.date(from: forecasts.referenceTime)
@@ -81,7 +64,7 @@ class ForecastModel {
 			
 			date = calendar.dateComponents([.weekday, .month, .day, .hour], from: dateFormatter.date(from: t.validTime)!)
 			for p in t.parameters {
-			
+				
 				switch p.name {
 				case "msl":
 					airPressure = p.values.first!
@@ -124,14 +107,11 @@ class ForecastModel {
 				default:
 					print("Soemting went wrong")
 				}
-			
+				
 			}
 			f.append(Forecast(date: date, airPressure: airPressure, temp: temp, visiblity: visiblity, windDirection: windDirection, windSpeed: windSpeed, humidity: humidity, thunderProb: thunderProb, totalCloudCover: totalCloudCover, lowCloudCover: lowCloudCover, mediumCloudCover: mediumCloudCover, highCloudCover: highCloudCover, windGustSpeed: windGustSpeed, minPrecipitation: minPrecipitation, maxPrecipitation: maxPrecipitation, frozenPrecipitationPercent: frozenPrecipitationPercent, category: category, precipitationMean: precipitationMean, precipitationMedian: precipitationMedian, symbol: symbol))
 		}
-		self.forecasts = f
-		NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "ForecastUpdated")))
-		
-	
+		return f
 	}
 	
 	func isTimeForNewForecast() -> Bool {
@@ -153,3 +133,4 @@ class ForecastModel {
 		return distance == -1 || distance > 10000
 	}
 }
+

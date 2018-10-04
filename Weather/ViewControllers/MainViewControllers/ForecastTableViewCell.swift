@@ -28,7 +28,7 @@ class ForecastTableViewCell: UITableViewCell {
 	let highTempLabel: UILabel = {
 		let label = UILabel()
 		label.textAlignment = .center
-		label.font = UIFont.boldSystemFont(ofSize: 18)
+		label.font = UIFont.boldSystemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
 		label.numberOfLines = 0
@@ -37,8 +37,8 @@ class ForecastTableViewCell: UITableViewCell {
 	}()
 	let lowTempLabel: UILabel = {
 		let label = UILabel()
-		label.textAlignment = .center
-		label.font = UIFont.boldSystemFont(ofSize: 18)
+		label.textAlignment = .left
+		label.font = UIFont.boldSystemFont(ofSize: 20)
 		label.adjustsFontSizeToFitWidth = true
 		label.minimumScaleFactor = 0.1
 		label.numberOfLines = 0
@@ -91,12 +91,7 @@ class ForecastTableViewCell: UITableViewCell {
 			view.translatesAutoresizingMaskIntoConstraints = false
 			return view
 		}()
-		let leftCenterView: UIView = {
-			let view = UIView()
-			view.translatesAutoresizingMaskIntoConstraints = false
-			return view
-		}()
-		let rightCenterView: UIView = {
+		let centerView: UIView = {
 			let view = UIView()
 			view.translatesAutoresizingMaskIntoConstraints = false
 			return view
@@ -113,43 +108,36 @@ class ForecastTableViewCell: UITableViewCell {
 		leftView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
 		leftView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		leftView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		leftView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.26).isActive = true
+		leftView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.35).isActive = true
 		leftView.addSubview(dayLabel)
-//		leftView.backgroundColor = .orange
+		//leftView.backgroundColor = .orange
+		
 		dayLabel.leftAnchor.constraint(equalTo: leftView.leftAnchor, constant: 20).isActive = true
-		dayLabel.centerYAnchor.constraint(equalTo: leftView.centerYAnchor).isActive = true
+		dayLabel.topAnchor.constraint(equalTo: leftView.topAnchor, constant: 10).isActive = true
 		dayLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor, constant: -20).isActive = true
-		dayLabel.heightAnchor.constraint(equalTo: leftView.heightAnchor, multiplier: 0.8).isActive = true
+		dayLabel.heightAnchor.constraint(equalTo: leftView.heightAnchor, multiplier: 0.3).isActive = true
 //		dayLabel.backgroundColor = .green
 		
-		addSubview(leftCenterView)
-		leftCenterView.leftAnchor.constraint(equalTo: leftView.rightAnchor).isActive = true
-		leftCenterView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-		leftCenterView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		leftCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.19).isActive = true
-//		leftCenterView.backgroundColor = .red
-
-		
-		leftCenterView.addSubview(forecastIcon)
-		forecastIcon.centerXAnchor.constraint(equalTo: leftCenterView.centerXAnchor).isActive = true
-		forecastIcon.centerYAnchor.constraint(equalTo:leftCenterView.centerYAnchor).isActive = true
-		forecastIcon.heightAnchor.constraint(equalTo: leftCenterView.heightAnchor, multiplier: 0.8).isActive = true
-		forecastIcon.widthAnchor.constraint(equalTo: leftCenterView.heightAnchor, multiplier: 0.8).isActive = true
-		
-		addSubview(rightCenterView)
-		rightCenterView.leftAnchor.constraint(equalTo: leftCenterView.rightAnchor).isActive = true
-		rightCenterView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-		rightCenterView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-		rightCenterView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.19).isActive = true
-//		rightCenterView.backgroundColor = .green
-		
-		
 		addSubview(rightView)
-		rightView.leftAnchor.constraint(equalTo: rightCenterView.rightAnchor).isActive = true
+		rightView.widthAnchor.constraint(equalTo: leftView.widthAnchor).isActive = true
 		rightView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		rightView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 		rightView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
-//		rightView.backgroundColor = .gray
+		//rightView.backgroundColor = .gray
+		
+		addSubview(centerView)
+		centerView.leftAnchor.constraint(equalTo: leftView.rightAnchor).isActive = true
+		centerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+		centerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		centerView.rightAnchor.constraint(equalTo: rightView.leftAnchor).isActive = true
+		//centerView.backgroundColor = .red
+
+		
+		centerView.addSubview(forecastIcon)
+		forecastIcon.centerXAnchor.constraint(equalTo: centerView.centerXAnchor).isActive = true
+		forecastIcon.centerYAnchor.constraint(equalTo:centerView.centerYAnchor).isActive = true
+		forecastIcon.heightAnchor.constraint(equalTo: centerView.heightAnchor, multiplier: 0.8).isActive = true
+		forecastIcon.widthAnchor.constraint(equalTo: centerView.heightAnchor, multiplier: 0.8).isActive = true
 		
 		rightView.addSubview(windIcon)
 		windIcon.leftAnchor.constraint(equalTo: rightView.leftAnchor).isActive = true
@@ -180,35 +168,37 @@ class ForecastTableViewCell: UITableViewCell {
 		dayLabel.text = getDayString(components: forecast.first!.date)
 		forecastIcon.image = IconHandler.getForecastIcon(symbol: symbolFor(forecasts: forecast))
 		forecastIcon.image?.withRenderingMode(.alwaysTemplate)
-		rightCenterView.addSubview(highTempLabel)
-		highTempLabel.centerYAnchor.constraint(equalTo: rightCenterView.centerYAnchor).isActive = true
-		
+		leftView.addSubview(highTempLabel)
+		highTempLabel.bottomAnchor.constraint(equalTo: leftView.bottomAnchor, constant: -10).isActive = true
+
 		if forecast.count > 1 {
-			rightCenterView.addSubview(lowTempLabel)
-			highTempLabel.leftAnchor.constraint(equalTo: rightCenterView.leftAnchor).isActive = true
-			highTempLabel.widthAnchor.constraint(equalTo: rightCenterView.widthAnchor, multiplier: 0.5).isActive = true
-			highTempLabel.heightAnchor.constraint(equalTo: rightCenterView.heightAnchor).isActive = true
-			
-			lowTempLabel.centerYAnchor.constraint(equalTo: rightCenterView.centerYAnchor).isActive = true
-			lowTempLabel.rightAnchor.constraint(equalTo: rightCenterView.rightAnchor).isActive = true
-			lowTempLabel.widthAnchor.constraint(equalTo: rightCenterView.widthAnchor, multiplier: 0.5).isActive = true
-			lowTempLabel.heightAnchor.constraint(equalTo: rightCenterView.heightAnchor).isActive = true
-			
+			leftView.addSubview(lowTempLabel)
+			highTempLabel.leftAnchor.constraint(equalTo: leftView.leftAnchor).isActive = true
+			highTempLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor, multiplier: 0.45).isActive = true
+			highTempLabel.topAnchor.constraint(equalTo: dayLabel.bottomAnchor).isActive = true
+			highTempLabel.textAlignment = .right
+
+			lowTempLabel.bottomAnchor.constraint(equalTo: leftView.bottomAnchor, constant: -10).isActive = true
+			lowTempLabel.rightAnchor.constraint(equalTo: leftView.rightAnchor).isActive = true
+			lowTempLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor, multiplier: 0.45).isActive = true
+			lowTempLabel.topAnchor.constraint(equalTo: dayLabel.bottomAnchor).isActive = true
+
 			let temps = getTemps(forecasts: forecast)
 			highTempLabel.text = "\(Int(temps.0))°"
 			lowTempLabel.text = "\(Int(temps.1))°"
-			
+
 		}else {
 			lowTempLabel.text = ""
-			highTempLabel.centerXAnchor.constraint(equalTo: rightCenterView.centerXAnchor).isActive = true
-			highTempLabel.heightAnchor.constraint(equalTo: rightCenterView.heightAnchor, multiplier: 0.8).isActive = true
-			highTempLabel.widthAnchor.constraint(equalTo: rightCenterView.widthAnchor).isActive = true
+			highTempLabel.textAlignment = .center
+			highTempLabel.centerXAnchor.constraint(equalTo: leftView.centerXAnchor).isActive = true
+			highTempLabel.topAnchor.constraint(equalTo: dayLabel.bottomAnchor).isActive = true
+			highTempLabel.widthAnchor.constraint(equalTo: leftView.widthAnchor).isActive = true
 			highTempLabel.text = "\(Int(forecast.first!.temp.rounded()))°"
 		}
 		
 		windLabel.text = "\(getMeanWind(forecasts: forecast)) m/s"
 		let rainParameters = getTotalPrecipitation(forecsts: forecast)
-		rainLabel.text = "\(rainParameters.0) \(rainParameters.1)"
+		rainLabel.text = "\(self.round(value: rainParameters.0)) \(rainParameters.1)"
 		self.accessoryType = .disclosureIndicator
 	}
 	
@@ -292,5 +282,9 @@ class ForecastTableViewCell: UITableViewCell {
 		}
 	}
 
+	private func round(value: Double) -> Float {
+		let v = Int(value * 10)
+		return Float(v) / 10
+	}
 
 }

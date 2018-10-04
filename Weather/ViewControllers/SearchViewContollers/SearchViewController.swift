@@ -23,8 +23,8 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		self.view.backgroundColor = theme.backgroundColor
 		
 //		
-		searchTableView.didMove(toParentViewController: self)
-		addChildViewController(searchTableView)
+		searchTableView.didMove(toParent: self)
+		addChild(searchTableView)
 		self.searchTableView.tableView.isScrollEnabled = false
 		let searchView = searchTableView.view!
 		searchView.translatesAutoresizingMaskIntoConstraints = false
@@ -81,11 +81,11 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 						let boldFont = UIFont.systemFont(ofSize: 18)
 
 						let string = r.attributedPrimaryText.mutableCopy() as! NSMutableAttributedString
-						string.enumerateAttribute(NSAttributedStringKey(rawValue: kGMSAutocompleteMatchAttribute), in: NSMakeRange(0, string.length), options: 	NSAttributedString.EnumerationOptions(rawValue: 0), using: { (value, range, stop) in
+						string.enumerateAttribute(NSAttributedString.Key(rawValue: kGMSAutocompleteMatchAttribute), in: NSMakeRange(0, string.length), options: 	NSAttributedString.EnumerationOptions(rawValue: 0), using: { (value, range, stop) in
 							let font = value == nil ? regularFont : boldFont
 							let color = value == nil ? theme.contrastTextColor : theme.textColor
-							string.addAttributes([NSAttributedStringKey.font : font], range: range)
-							string.addAttributes([NSAttributedStringKey.foregroundColor : color], range: range)
+							string.addAttributes([NSAttributedString.Key.font : font], range: range)
+							string.addAttributes([NSAttributedString.Key.foregroundColor : color], range: range)
 						})
 				
 						places.append(PlaceSearchItem(string: string, placeID: placeID))

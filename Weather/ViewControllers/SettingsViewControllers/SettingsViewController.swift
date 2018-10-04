@@ -40,8 +40,8 @@ class SettingsViewController: UIViewController {
 		themeListLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
 		themeListLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.1).isActive = true
 		
-		addChildViewController(themeTable)
-		themeTable.didMove(toParentViewController: self)
+		addChild(themeTable)
+		themeTable.didMove(toParent: self)
 		let tableView = themeTable.tableView!
 		self.view.addSubview(tableView)
 		tableView.topAnchor.constraint(equalTo: themeListLabel.bottomAnchor, constant: 0).isActive = true

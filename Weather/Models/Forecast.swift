@@ -1,13 +1,12 @@
 //
 //  Forecast.swift
-//  Weather
+//  Forecast
 //
-//  Created by Simon Kärrman on 2018-03-01.
+//  Created by Simon Kärrman on 2018-09-10.
 //  Copyright © 2018 Simon Kärrman. All rights reserved.
 //
 
 import Foundation
-
 
 struct DataPoint : Decodable {
 	//	[{"name":"spp","levelType":"hl","level":0,"unit":"percent","values":[-9]},{"name":"pcat","levelType":"hl","level":0,"unit":"category","values":[0]},
@@ -69,3 +68,4 @@ struct Forecast {
 	let precipitationMedian: Double
 	let symbol: Symbol
 }
+

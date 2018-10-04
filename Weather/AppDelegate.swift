@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var mainViewController: MainViewController!
 
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		
 		GMSPlacesClient.provideAPIKey(GoogleApi.key)
 		
@@ -27,14 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		window = UIWindow(frame: UIScreen.main.bounds)
 
-		UIApplication.shared.statusBarStyle = theme.statusBarStyle
 		mainViewController = MainViewController()
 		let navigationController = UINavigationController(rootViewController: mainViewController)
 		navigationController.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController.pushViewController(mainViewController, animated: true)
 		navigationController.navigationBar.prefersLargeTitles = true
 		navigationController.navigationBar.tintColor = theme.textColor
-		navigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		navigationController.navigationItem.largeTitleDisplayMode = .always
 		navigationController.navigationBar.isTranslucent = false
 

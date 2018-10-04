@@ -2,7 +2,7 @@
 //  Location.swift
 //  Weather
 //
-//  Created by Simon Kärrman on 2018-04-11.
+//  Created by Simon Kärrman on 2018-09-11.
 //  Copyright © 2018 Simon Kärrman. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import Foundation
 import os.log
 
 class Location: NSObject, NSCoding {
-
+	
 	let name: String
 	let longitude: Double
 	let latitude: Double
@@ -31,7 +31,7 @@ class Location: NSObject, NSCoding {
 			return nil
 		}
 		let longitude = aDecoder.decodeDouble(forKey: PropertyKey.longitude)
-		let latitude = aDecoder.decodeDouble(forKey: PropertyKey.latitude) 
+		let latitude = aDecoder.decodeDouble(forKey: PropertyKey.latitude)
 		
 		self.init(name: name, longitude: longitude, latitude: latitude)
 	}

@@ -11,7 +11,7 @@ import UIKit
 class LoadingView: UIView {
 	
 	var activityIndicatorView: UIActivityIndicatorView = {
-		let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		let view = UIActivityIndicatorView(style: .whiteLarge)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		return view
 	}()

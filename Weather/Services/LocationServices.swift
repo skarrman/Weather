@@ -8,16 +8,17 @@
 
 import Foundation
 import CoreLocation
+import RxSwift
 
 class LocationServices: NSObject, CLLocationManagerDelegate {
 	
-	var forecastModel: ForecastModel
 	var locationManager: CLLocationManager!
-	private var lastLocation: CLLocation?
-	
-	init(forecastModel: ForecastModel) {
+	private let locationSubject: PublishSubject<Location>
+	private let disposeBag = DisposeBag()
+
+	override init() {
 		locationManager = CLLocationManager()
-		self.forecastModel = forecastModel
+		self.locationSubject = PublishSubject()
 		super.init()
 		
 		locationManager.delegate = self
@@ -28,14 +29,6 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 	
 	func makeRequest() {
 		locationManager.requestWhenInUseAuthorization()
-	}
-	
-	func determineMyLocation(){
-		if isPermissionDetermined() && CLLocationManager.locationServicesEnabled(){
-			locationManager.startUpdatingLocation()
-		}else {
-			reverseGeocode(userLocation: CLLocation(latitude: 59.331495, longitude: 18.056975))
-		}
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -82,8 +75,8 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 			if error == nil {
 				let firstLocation = placemarks?[0]
 				let cityName = firstLocation!.locality!
-				let l = Location(name: cityName, longitude: userLocation.coordinate.longitude, latitude: userLocation.coordinate.latitude)
-				self.forecastModel.updateForecast(location: l)
+				let l = Location(name: cityName, longitude: self.round(userLocation.coordinate.longitude), latitude: self.round(userLocation.coordinate.latitude))
+				self.locationSubject.onNext(l)
 				return
 				
 			}
@@ -92,6 +85,35 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
 				print("An error occurred during geocoding.")
 			}
 		}
+	}
+	
+	func getCurrentLocation() -> Single<Location> {
+		return Single<Location>.create { single in
+			if self.isPermissionDetermined() && CLLocationManager.locationServicesEnabled() {
+				self.locationManager.requestLocation()
+				self.locationSubject
+					.subscribeOn(CurrentThreadScheduler.instance)
+					.subscribe({ event in
+						if let location = event.element {
+							single(.success(location))
+						} else {
+							single(.error(event.error!))
+						}
+					})
+					.disposed(by: self.disposeBag)
+			
+			} else {
+				//userLocation = CLLocation(latitude: 57.857539, longitude: 12.502884)
+				let location = Location(name: "Alingsås", longitude: 57.857539, latitude: 12.502884)
+				single(.success(location))
+			}
+			return Disposables.create {}
+		}
+	}
+
+	private func round(_ value: Double) -> Double {
+		let decimals = 1000000.0
+		return (value * decimals).rounded() / decimals
 	}
 	
 	func isPermissionDetermined() -> Bool {

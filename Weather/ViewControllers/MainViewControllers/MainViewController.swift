@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 
 class MainViewController: UIViewController, UIPopoverPresentationControllerDelegate {
@@ -59,16 +60,20 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		return button
 	}()
 	
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return ThemeHandler.getInstance().getCurrentTheme().statusBarStyle
+	}
+	
+	let disposeBag = DisposeBag()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		_ = UINavigationController(rootViewController: self)
 		forecastModel = ForecastModel()
-		locationServices = LocationServices(forecastModel: forecastModel)
+		locationServices = LocationServices()
 		self.view.addSubview(forecastTableView.view)
-//		self.view.addSubview(activityIndicatorView)
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(self.forecastUpdated), name: NSNotification.Name(rawValue: "ForecastUpdated"), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
 		
 		searchButton.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
@@ -99,7 +104,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
 		nav.navigationBar.barStyle = theme.navigationBarStyle
 		nav.navigationBar.tintColor = theme.textColor
-		nav.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		nav.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		
 		let popOver = nav.popoverPresentationController
 		popOver?.delegate = self
@@ -120,22 +125,23 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 			handler.changeTheme(to: .black)
 		}
 		let theme = handler.getCurrentTheme()
-		UIApplication.shared.statusBarStyle = theme.statusBarStyle
+		
 		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController?.navigationBar.tintColor = theme.textColor
-		navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
+		setNeedsStatusBarAppearanceUpdate()
 		applyTheme()
 	}
 	
 	@objc func applyTheme(){
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
-		UIApplication.shared.statusBarStyle = theme.statusBarStyle
 		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController?.navigationBar.tintColor = theme.textColor
-		navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : theme.textColor, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 24)]
+		navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		view.backgroundColor = theme.backgroundColor
 		searchButton.tintColor = theme.iconColor
 		themeButton.tintColor = theme.iconColor
+		setNeedsStatusBarAppearanceUpdate()
 		forecastTableView.applyTheme()
 	}
 	
@@ -158,16 +164,10 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		
 	}
 	
-	@objc func startUpdatingForecast(){
-		//updated = false
-		startRefreshing()
-		locationServices.determineMyLocation()
-	}
-	
 	@objc func updateWithCurrentLocation(){
 		startRefreshing()
 		if locationServices.isPermissionDetermined(){
-			locationServices.determineMyLocation()
+			updateForecastForCurrentLocation()
 		} else {
 			locationServices.makeRequest()
 		}
@@ -181,18 +181,50 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 	}
 	
 	func refreshForecast(){
-		
 		if currentLocation != nil {
 			startRefreshing()
-			forecastModel.updateForecast(location: currentLocation)
-		}else{
-			startUpdatingForecast()
+			updateForecast(for: currentLocation)
+		} else {
+			updateWithCurrentLocation()
 		}
+	}
+	
+	private func updateForecastForCurrentLocation() {
+		locationServices.getCurrentLocation()
+			.subscribeOn(CurrentThreadScheduler.instance)
+			.map { location in
+				return self.forecastModel.getForecast(for: location)
+			}
+			.observeOn(MainScheduler.instance)
+			.subscribe( onSuccess: { single in
+				single.subscribe(
+					onSuccess: { forecasts in
+						self.update(forecasts)
+				}, onError: { error in
+					print("Error when getting forecast for current location: ",error)
+				}).disposed(by: self.disposeBag)
+			}
+			)
+			.disposed(by: disposeBag)
+		}
+	
+	func updateForecast(for location: Location) {
+		forecastModel.getForecast(for: location)
+			.subscribeOn(CurrentThreadScheduler.instance)
+			.observeOn(MainScheduler.instance)
+			.subscribe(
+				onSuccess: { forecasts in
+					self.update(forecasts)
+				},
+				onError: { error in
+					print("Error when getting forecast for other location:", error)
+				}
+			)
+			.disposed(by: disposeBag)
 	}
 
 	
-	@objc func forecastUpdated(){
-		let forecasts = forecastModel.getForecasts()
+	func update(_ forecasts: [Forecast]){
 		currentLocation = forecastModel.getLocation()
 		stopRefreshing()
 		forecastTableView.updateWithForecast(forecasts: forecasts)
@@ -210,8 +242,8 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 	
 	func initTableView() {
 		let tableView = forecastTableView.tableView!
-		self.addChildViewController(forecastTableView)
-		forecastTableView.didMove(toParentViewController: self)
+		self.addChild(forecastTableView)
+		forecastTableView.didMove(toParent: self)
 		tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
 		tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 		tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
