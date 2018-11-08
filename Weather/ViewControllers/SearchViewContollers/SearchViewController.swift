@@ -14,6 +14,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 	let searchTableView: SearchTableViewController = SearchTableViewController()
 	var latestSearchConstraint: NSLayoutConstraint!
 	var searchConstraint: NSLayoutConstraint!
+	var searchController: UISearchController!
 	
     override func viewDidLoad() {
 		
@@ -38,7 +39,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 		searchConstraint = searchView.heightAnchor.constraint(equalToConstant: searchTableView.tableView.rowHeight * 6 + searchTableView.tableView.sectionHeaderHeight)
 		
-		let searchController = UISearchController(searchResultsController: nil)
+		searchController = UISearchController(searchResultsController: nil)
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.placeholder = NSLocalizedString("search_location", comment: "")
@@ -50,6 +51,13 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 		
 		
+		
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		searchController.searchBar.text = ""
+		searchController.dismiss(animated: true) {}
 		
 	}
 	

@@ -14,7 +14,7 @@ class APIClient {
 	func send(apiRequest: APIRequest) -> Single<Forecasts> {
 		return Single<Forecasts>.create { single in
 			let request = apiRequest.request(with: self.baseURL)
-			print("URL", request.url ?? "No url")
+//			print("URL", request.url ?? "No url")
 			let task = URLSession.shared.dataTask(with: request) {(data, response, error) in
 				if let error = error {
 					single(.error(error))
@@ -22,7 +22,7 @@ class APIClient {
 				}
 				do {
 					if let data = data {
-						print("Data:", data)
+//						print("Data:", data)
 						let json: Forecasts = try JSONDecoder().decode(Forecasts.self, from: data)
 						single(.success(json))
 					} else {

@@ -95,6 +95,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		initTableView()
 	
 		applyTheme()
+		setUpSearchBehavior()
 	}
 	
 	@objc func goToSettings(){
@@ -172,13 +173,27 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 			locationServices.makeRequest()
 		}
 	}
+	
+	private func setUpSearchBehavior(){
+		searchViewController
+			.searchTableView
+			.locationSubject
+			.subscribe(onNext: {
+				location in
+				
+				self.updateForecast(for: location)
+				
+			}
+			).disposed(by: disposeBag)
+		
+	}
 
 	
 	@objc private func goToPlacesSearch(){
-		let placesSearchViewController = SearchViewController()
-		placesSearchViewController.searchTableView.forecastModel = forecastModel
-		navigationController?.pushViewController(placesSearchViewController, animated: true)
+		navigationController?.pushViewController(searchViewController, animated: true)
 	}
+	
+	
 	
 	func refreshForecast(){
 		if currentLocation != nil {
@@ -214,6 +229,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 			.observeOn(MainScheduler.instance)
 			.subscribe(
 				onSuccess: { forecasts in
+					
 					self.update(forecasts)
 				},
 				onError: { error in

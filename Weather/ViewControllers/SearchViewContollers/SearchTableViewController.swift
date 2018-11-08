@@ -8,15 +8,18 @@
 
 import UIKit
 import GooglePlaces
+import RxSwift
 import os.log
 
 class SearchTableViewController: UITableViewController {
 	
-	var forecastModel: ForecastModel!
+
 	var savedLocations = [Location]()
 	var searchedPlaces = [PlaceSearchItem]()
 	var googleCell: GoogleTableViewCell!
 	var inSearch: Bool!
+	
+	let locationSubject: PublishSubject<Location> = PublishSubject()
 
 
     override func viewDidLoad() {
@@ -146,11 +149,11 @@ class SearchTableViewController: UITableViewController {
 			let client = GMSPlacesClient.shared()
 			client.lookUpPlaceID(searchedPlaces[indexPath.row].placeID) { (place, error) in
 				if place != nil {
-					let location = Location(name: place!.name, longitude: place!.coordinate.longitude, latitude: place!.coordinate.latitude)
+					let location = Location(name: place!.name, longitude: self.round(place!.coordinate.longitude), latitude: self.round(place!.coordinate.latitude))
 					self.addToSaved(location: location)
 					self.saveLocations()
-					//self.forecastModel.updateForecast(location: location)
-					self.navigationController?.popViewController(animated: true)
+					self.locationSubject.onNext(location)
+					self.goBackToMainView()
 				}
 			}
 		} else {
@@ -162,12 +165,12 @@ class SearchTableViewController: UITableViewController {
 				addToSaved(location: location)
 				saveLocations()
 			}
-			//forecastModel.updateForecast(location: location)
-			navigationController?.popViewController(animated: true)
+			self.locationSubject.onNext(location)
+			self.goBackToMainView()
 		}
 	}
 	private func addToSaved(location: Location) {
-		print("After",savedLocations)
+
 		if savedLocations.count == 0 {
 			savedLocations.append(location)
 		}else{
@@ -184,6 +187,10 @@ class SearchTableViewController: UITableViewController {
 				savedLocations.remove(at: 5)
 			}
 		}
+	}
+	
+	private func goBackToMainView(){
+		navigationController?.popViewController(animated: true)
 	}
 	
 	private func removeFromSaved(location: Location){
@@ -217,6 +224,11 @@ class SearchTableViewController: UITableViewController {
 	
 	private func loadLocations() -> [Location]?  {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Location.ArchiveURL.path) as? [Location]
+	}
+	
+	private func round(_ value: Double) -> Double {
+		let decimals = 1000000.0
+		return (value * decimals).rounded() / decimals
 	}
 }
 

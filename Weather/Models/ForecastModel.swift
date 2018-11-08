@@ -28,6 +28,7 @@ public class ForecastModel {
 		return Single<[Forecast]>.create { single in
 		
 			self.location = location
+
 			
 			let apiClient = APIClient()
 	
