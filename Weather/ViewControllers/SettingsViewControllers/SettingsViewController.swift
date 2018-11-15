@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 class SettingsViewController: UIViewController {
+	
+	let disposeBag  = DisposeBag()
 
 	let themeTable: ThemeTableViewController = {
 		let table = ThemeTableViewController()
@@ -33,8 +36,6 @@ class SettingsViewController: UIViewController {
 		
 		self.title = NSLocalizedString("settings", comment: "")
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
-		
 		self.view.addSubview(themeListLabel)
 		themeListLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
 		themeListLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
@@ -53,18 +54,24 @@ class SettingsViewController: UIViewController {
 		// Do any additional setup after loading the view.
 		
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.done))
-		applyTheme()
+		apply(ThemeHandler.getInstance().getCurrentTheme())
+		
+		
+		themeTable.themeSubject
+			.subscribeOn(CurrentThreadScheduler.instance)
+			.observeOn(MainScheduler.instance)
+			.subscribe(onNext: { theme in
+				self.apply(theme)
+			}).disposed(by: disposeBag)
 	}
 	
 	@objc func done(){
 		self.dismiss(animated: true, completion: nil)
 	}
 	
-	@objc private func applyTheme(){
-		let theme = ThemeHandler.getInstance().getCurrentTheme()
+	private func apply(_ theme: Theme){
 		self.view.backgroundColor = theme.backgroundColor
 		self.themeListLabel.textColor = theme.textColor
-		
 	}
 	
 	override func didReceiveMemoryWarning() {

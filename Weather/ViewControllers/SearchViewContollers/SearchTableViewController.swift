@@ -30,15 +30,12 @@ class SearchTableViewController: UITableViewController {
 		inSearch = false
 		
 		
-		tableView.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
-		
 		tableView.estimatedRowHeight = 50
 		tableView.rowHeight = 50
 		tableView.estimatedSectionHeaderHeight = 30
 		tableView.sectionHeaderHeight = 30
 		
 		googleCell = GoogleTableViewCell()
-		googleCell.setUp()
 		
 		guard let saved = loadLocations() else {
 			print("No locations saved")
@@ -51,6 +48,12 @@ class SearchTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+	
+	func applyTheme(){
+		tableView.backgroundColor = ThemeHandler.getInstance().getCurrentTheme().backgroundColor
+		googleCell.setUp()
+		tableView.reloadData()
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -92,7 +95,9 @@ class SearchTableViewController: UITableViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SearchTableViewCell
 		
 		// Configure the cell...
-		cell.cityLabel.textColor = ThemeHandler.getInstance().getCurrentTheme().textColor
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		cell.cityLabel.textColor = theme.textColor
+		cell.backgroundColor = theme.backgroundColor
 		if inSearch {
 			if searchedPlaces.count > 0 {
 				if indexPath.row < searchedPlaces.count {

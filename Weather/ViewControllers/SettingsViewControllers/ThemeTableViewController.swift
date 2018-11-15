@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 class ThemeTableViewController: UITableViewController {
+	
+	let themeSubject: PublishSubject<Theme> = PublishSubject()
 	
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return ThemeHandler.getInstance().getCurrentTheme().statusBarStyle
@@ -59,18 +62,18 @@ class ThemeTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let feedBackGenerator = UIImpactFeedbackGenerator()
 		if(indexPath.row == 0 && view.backgroundColor != .black){
-			changeTheme(to: .black)
+			themeSubject.onNext(changeTheme(to: .black))
 			feedBackGenerator.impactOccurred()
 		}else if(indexPath.row == 1 && view.backgroundColor != .white){
-			changeTheme(to: .white)
+			themeSubject.onNext(changeTheme(to: .white))
 			feedBackGenerator.impactOccurred()
 		}
 		tableView.deselectRow(at: indexPath, animated: true)
-		NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "ThemeChanged")))
+
 		
 	}
 	
-	func changeTheme(to: ThemeName.Identifier){
+	func changeTheme(to: ThemeName.Identifier) -> Theme {
 		let handler = ThemeHandler.getInstance()
 		handler.changeTheme(to: to)
 		
@@ -80,6 +83,7 @@ class ThemeTableViewController: UITableViewController {
 		navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		applyTheme()
 		setNeedsStatusBarAppearanceUpdate()
+		return theme
 	}
 	
 	

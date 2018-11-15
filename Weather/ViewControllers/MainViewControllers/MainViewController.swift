@@ -74,8 +74,6 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		locationServices = LocationServices()
 		self.view.addSubview(forecastTableView.view)
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(self.applyTheme), name: NSNotification.Name(rawValue: "ThemeChanged"), object: nil)
-		
 		searchButton.addTarget(self, action: #selector(self.goToPlacesSearch), for: .touchUpInside)
 		themeButton.addTarget(self, action: #selector(self.goToSettings), for: .touchUpInside)
 		locationButton.addTarget(self, action: #selector(self.updateWithCurrentLocation), for: .touchUpInside)
@@ -94,7 +92,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 //		initActivityIndicator()
 		initTableView()
 	
-		applyTheme()
+		apply(ThemeHandler.getInstance().getCurrentTheme())
 		setUpSearchBehavior()
 	}
 	
@@ -106,7 +104,12 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		nav.navigationBar.barStyle = theme.navigationBarStyle
 		nav.navigationBar.tintColor = theme.textColor
 		nav.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
-		
+		settingsViewController.themeTable.themeSubject
+			.subscribeOn(CurrentThreadScheduler.instance)
+			.observeOn(MainScheduler.instance)
+			.subscribe(onNext: { theme in
+				self.apply(theme)
+			}).disposed(by: disposeBag)
 		let popOver = nav.popoverPresentationController
 		popOver?.delegate = self
 		popOver?.barButtonItem = navigationItem.leftBarButtonItem
@@ -131,10 +134,10 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		navigationController?.navigationBar.tintColor = theme.textColor
 		navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : theme.textColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 24)]
 		setNeedsStatusBarAppearanceUpdate()
-		applyTheme()
+		apply(theme)
 	}
 	
-	@objc func applyTheme(){
+	func apply(_ theme: Theme){
 		let theme = ThemeHandler.getInstance().getCurrentTheme()
 		navigationController?.navigationBar.barStyle = theme.navigationBarStyle
 		navigationController?.navigationBar.tintColor = theme.textColor
@@ -144,6 +147,7 @@ class MainViewController: UIViewController, UIPopoverPresentationControllerDeleg
 		themeButton.tintColor = theme.iconColor
 		setNeedsStatusBarAppearanceUpdate()
 		forecastTableView.applyTheme()
+		searchViewController.applyTheme()
 	}
 	
 	private func startRefreshing(){

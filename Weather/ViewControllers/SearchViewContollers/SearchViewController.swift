@@ -20,8 +20,6 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 		self.title = NSLocalizedString("search_projection", comment: "")
 		
-		let theme = ThemeHandler.getInstance().getCurrentTheme()
-		self.view.backgroundColor = theme.backgroundColor
 		
 //		
 		searchTableView.didMove(toParent: self)
@@ -49,8 +47,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
 		
-		
-		
+		applyTheme()
 		
 	}
 	
@@ -61,10 +58,11 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
 		
 	}
 	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	func applyTheme(){
+		let theme = ThemeHandler.getInstance().getCurrentTheme()
+		self.view.backgroundColor = theme.backgroundColor
+		searchTableView.applyTheme()
+	}
 	
 	func updateSearchResults(for searchController: UISearchController) {
 		if searchController.searchBar.text!.count > 0 {
